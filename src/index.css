@@ -1,26 +1,26 @@
 @import "tailwindcss";
 
 :root {
-  /* Palet warna hangat & tepercaya (kontras >= 4.5:1) */
-  --color-canvas: #F8FBFF;
+  /* Palet warna medis tepercaya, bersih & hangat (kontras >= 4.5:1) */
+  --color-canvas: #F8FAFC;
   --color-surface: #FFFFFF;
-  --color-surface-soft: #EFF6FF;
+  --color-surface-soft: #F0F9FF;
   --color-surface-teal: #F0FDFA;
   --color-surface-warm: #FFFBEB;
-  --color-border: #DCE8F5;
+  --color-border: #E2E8F0;
 
   --color-heading: #0B4F6C;
-  --color-heading-accent: #C2410C;
+  --color-heading-accent: #EA580C;
   --color-ink: #0F2942;
   --color-body: #334155;
   --color-ink-muted: #475569;
 
-  --color-primary: #0284C7;
-  --color-primary-dark: #0369A1;
-  --color-teal: #0F766E;
-  --color-accent: #C2410C;
-  --color-accent-hover: #9A3412;
-  --color-warm: #F59E0B;
+  --color-primary: #489BE2;
+  --color-primary-dark: #2D7FC4;
+  --color-teal: #F97316;
+  --color-accent: #EA580C;
+  --color-accent-hover: #C2410C;
+  --color-warm: #F2B029;
 
   /* Sistem Tipografi: Maksimal 2 Font Family */
   --font-heading: 'Fredoka', system-ui, -apple-system, sans-serif;
@@ -129,11 +129,11 @@
   letter-spacing: 3px;
 }
 
-/* Efek stabilo/spidol kuning di belakang kata "Cepat Sembuh" */
+/* Efek stabilo/spidol kuning di belakang kata highlight headline */
 .hero-marker-highlight {
   position: relative;
   display: inline-block;
-  color: #0F766E;
+  color: #1D6FB8;
   z-index: 1;
   white-space: nowrap;
 }
@@ -276,12 +276,30 @@
   width: 28%;
   background: linear-gradient(
     to right,
-    #F8FBFF 0%,
-    rgba(248, 251, 255, 0.78) 38%,
-    rgba(248, 251, 255, 0) 100%
+    #F8FAFC 0%,
+    rgba(248, 250, 252, 0.78) 38%,
+    rgba(248, 250, 252, 0) 100%
   );
   z-index: 10;
   pointer-events: none;
+}
+
+/* Native HTML <details> & <summary> FAQ Accordion */
+.faq-details summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.faq-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-details[open] .faq-chevron {
+  transform: rotate(180deg);
+}
+
+.faq-details[open] summary {
+  color: #489BE2;
 }
 
 .hero-gallery-slide {

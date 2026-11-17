@@ -18,7 +18,11 @@ import {
   Navigation,
   Star,
 } from 'lucide-react';
-import { CLINIC_BRANCHES, type ClinicBranchConfig } from '../data/clinicData';
+import {
+  CLINIC_BRANCHES,
+  PARENT_TESTIMONIALS,
+  type ClinicBranchConfig,
+} from '../data/clinicData';
 
 export interface GoogleReviewData {
   authorName: string;
@@ -205,19 +209,19 @@ export const GoogleReviewsSection: React.FC<GoogleReviewsSectionProps> = ({
   const mapsUrl = activeData.googleMapsUri || activeBranch.mapsSearchUrl;
 
   return (
-    <section id="testimoni" className="py-16 sm:py-24">
+    <section id="testimoni" className="bg-[#F8FAFC] py-16 sm:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
           <div className="max-w-2xl">
-            <p className="text-base font-semibold text-[#0284C7]">
-              Terhubung Langsung dengan Google Maps
+            <p className="text-base font-bold text-[#489BE2]">
+              Testimoni Nyata Keluarga
             </p>
             <h2 className="typo-h2 mt-2">
-              Ulasan Asli Orang Tua di <span className="typo-accent-word">Google</span>
+              Kata Ayah &amp; <span className="typo-accent-word">Bunda</span>
             </h2>
             <p className="typo-subheadline mt-3">
-              Pilih cabang Sunat Nano Circumcision di bawah ini untuk membaca ulasan asli dari
-              Ayah dan Bunda langsung melalui Google Maps.
+              Cerita pengalaman orang tua yang telah mempercayakan sunat buah hatinya bersama tim
+              dokter Sunat Nano di cabang Bangkalan, Surabaya, dan Sidoarjo.
             </p>
           </div>
 
@@ -225,9 +229,9 @@ export const GoogleReviewsSection: React.FC<GoogleReviewsSectionProps> = ({
             href={mapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-[44px] items-center gap-2 text-sm font-bold text-[#0284C7] hover:text-[#0369A1] transition-colors whitespace-nowrap shrink-0 self-start lg:self-auto"
+            className="inline-flex min-h-[44px] items-center gap-2 text-sm font-bold text-[#489BE2] hover:text-[#2D7FC4] transition-colors whitespace-nowrap shrink-0 self-start lg:self-auto"
           >
-            <span>Lihat semua ulasan di Google Maps</span>
+            <span>Lihat ulasan di Google Maps</span>
             <ExternalLink className="h-4 w-4" />
           </a>
         </div>
@@ -237,7 +241,7 @@ export const GoogleReviewsSection: React.FC<GoogleReviewsSectionProps> = ({
           <div
             role="tablist"
             aria-label="Pilih Cabang Ulasan Google Maps"
-            className="inline-flex flex-wrap gap-1.5 rounded-2xl bg-[#EFF6FF] p-1.5 border border-[#DCE8F5]"
+            className="inline-flex flex-wrap gap-1.5 rounded-2xl bg-[#EBF5FD] p-1.5 border border-[#BFDBFE]"
           >
             {CLINIC_BRANCHES.map((branch) => {
               const isSelected = branch.id === selectedBranchId;
@@ -251,14 +255,18 @@ export const GoogleReviewsSection: React.FC<GoogleReviewsSectionProps> = ({
                   onClick={() => onSelectBranch(branch.id)}
                   className={`inline-flex min-h-[42px] items-center gap-2 rounded-xl px-4 py-2 text-sm font-bold transition-colors whitespace-nowrap shrink-0 ${
                     isSelected
-                      ? 'bg-white text-[#0284C7] shadow-sm'
+                      ? 'bg-[#489BE2] text-white shadow-sm'
                       : 'text-[#475569] hover:text-[#0F2942]'
                   }`}
                 >
                   <span>Sunat Nano {branch.cityLabel}</span>
                   {typeof data.rating === 'number' && (
-                    <span className="inline-flex items-center gap-1 text-xs font-bold text-[#D97706] tabular-nums">
-                      <Star className="h-3.5 w-3.5 fill-[#F59E0B] text-[#F59E0B]" />
+                    <span
+                      className={`inline-flex items-center gap-1 text-xs font-bold tabular-nums ${
+                        isSelected ? 'text-[#FEF08A]' : 'text-[#D97706]'
+                      }`}
+                    >
+                      <Star className="h-3.5 w-3.5 fill-[#F2B029] text-[#F2B029]" />
                       {data.rating.toFixed(1)}
                     </span>
                   )}
@@ -287,7 +295,7 @@ export const GoogleReviewsSection: React.FC<GoogleReviewsSectionProps> = ({
         </div>
 
         {/* Verified Place Summary Strip */}
-        <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-2xl border border-[#DCE8F5] bg-white px-5 py-4">
+        <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-2xl border border-[#E2E8F0] bg-white px-5 py-4">
           <div className="min-w-0">
             <p className="font-display text-base font-bold text-[#0F2942]">
               {activeData.displayName || activeBranch.searchQuery}
@@ -301,7 +309,7 @@ export const GoogleReviewsSection: React.FC<GoogleReviewsSectionProps> = ({
               href={mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-xl border border-[#DCE8F5] bg-[#F8FBFF] px-4 py-2 text-xs font-bold text-[#0369A1] hover:bg-[#EFF6FF] transition-colors whitespace-nowrap shrink-0"
+              className="inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-xl border border-[#FDE68A] bg-[#FFFBEB] px-4 py-2 text-xs font-bold text-[#B45309] hover:bg-[#FEF3C7] transition-colors whitespace-nowrap shrink-0"
             >
               <span>Buka Profil Google</span>
               <ExternalLink className="h-3.5 w-3.5" />
@@ -309,7 +317,7 @@ export const GoogleReviewsSection: React.FC<GoogleReviewsSectionProps> = ({
             <button
               type="button"
               onClick={() => onConsult(`Konsultasi Cabang ${activeBranch.cityLabel}`)}
-              className="inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-xl bg-[#EA580C] px-4 py-2 text-xs font-bold text-white hover:bg-[#C2410C] transition-colors whitespace-nowrap shrink-0"
+              className="inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-xl bg-[#489BE2] px-4 py-2 text-xs font-bold text-white hover:bg-[#3182CE] transition-colors whitespace-nowrap shrink-0"
             >
               <MessageCircle className="h-3.5 w-3.5" />
               <span>Konsultasi Cabang Ini</span>
@@ -434,24 +442,60 @@ export const GoogleReviewsSection: React.FC<GoogleReviewsSectionProps> = ({
         {(activeData.status === 'empty' ||
           activeData.status === 'error' ||
           (activeData.status === 'success' && activeData.reviews.length === 0)) && (
-          <div className="mt-8 rounded-3xl border border-[#DCE8F5] bg-white p-8 text-center">
-            <p className="font-display text-lg font-bold text-[#0F2942]">
-              Ulasan Cabang {activeBranch.cityLabel} Tersedia di Google Maps
-            </p>
-            <p className="mt-2 mx-auto max-w-xl text-sm text-[#475569]">
-              {activeData.status === 'error'
-                ? 'Ulasan tidak dapat dimuat langsung saat ini. Ayah dan Bunda dapat melihat ulasan terverifikasi langsung melalui halaman Google Maps.'
-                : 'Klik tombol di bawah untuk membuka halaman ulasan Google Maps resmi cabang ini.'}
-            </p>
-            <a
-              href={mapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-5 inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[#0284C7] px-6 py-2.5 text-sm font-bold text-white hover:bg-[#0369A1] transition-colors"
-            >
-              <span>Buka Ulasan di Google Maps</span>
-              <ExternalLink className="h-4 w-4" />
-            </a>
+          <div className="mt-8 grid gap-6 md:grid-cols-2">
+            {PARENT_TESTIMONIALS.map((item) => (
+              <article
+                key={item.id}
+                className="flex flex-col justify-between rounded-3xl border border-[#E2E8F0] bg-white p-6 sm:p-7 shadow-[var(--shadow-card)] transition-transform duration-200 hover:-translate-y-0.5"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-3">
+                    <div
+                      className="flex items-center gap-1 text-[#F59E0B]"
+                      aria-label={`Rating ${item.rating} dari 5`}
+                    >
+                      {Array.from({ length: 5 }).map((_, starIdx) => (
+                        <Star
+                          key={starIdx}
+                          className="h-4 w-4 fill-[#F59E0B] text-[#F59E0B]"
+                        />
+                      ))}
+                    </div>
+                    <span className="text-xs font-bold text-[#EA580C]">
+                      Terverifikasi Orang Tua
+                    </span>
+                  </div>
+
+                  <p className="mt-4 text-sm sm:text-base leading-relaxed text-[#334155]">
+                    “{item.quote}”
+                  </p>
+                </div>
+
+                <div className="mt-6 flex items-center gap-3.5 border-t border-[#E2E8F0] pt-4">
+                  {item.photoSrc ? (
+                    <img
+                      src={item.photoSrc}
+                      alt={item.photoAlt || item.parentName}
+                      referrerPolicy="no-referrer"
+                      className="h-12 w-12 shrink-0 rounded-2xl object-cover border border-[#E2E8F0]"
+                    />
+                  ) : (
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#F0F9FF] font-heading text-sm font-bold text-[#0284C7]">
+                      {item.parentName.slice(0, 2).toUpperCase()}
+                    </div>
+                  )}
+
+                  <div className="min-w-0">
+                    <p className="font-heading text-base font-bold text-[#0F2942] truncate">
+                      {item.parentName}
+                    </p>
+                    <p className="text-xs sm:text-sm font-semibold text-[#475569] truncate">
+                      {item.cityAndService}
+                    </p>
+                  </div>
+                </div>
+              </article>
+            ))}
           </div>
         )}
       </div>
@@ -594,7 +638,7 @@ export const BranchLocationsSection: React.FC<BranchLocationsSectionProps> = ({
           {/* Left: 3 Branches + Home Visit Info */}
           <div className="flex flex-col justify-between rounded-3xl border border-[#DCE8F5] bg-white p-6 sm:p-10 shadow-[var(--shadow-card)] lg:col-span-6">
             <div>
-              <p className="text-base font-semibold text-[#0D9488]">
+              <p className="text-base font-bold text-[#EA580C]">
                 Cabang Klinik &amp; Home Visit Jawa Timur
               </p>
               <h2 className="typo-h2 mt-2">
@@ -618,15 +662,15 @@ export const BranchLocationsSection: React.FC<BranchLocationsSectionProps> = ({
                       onClick={() => onSelectBranch(branch.id)}
                       className={`w-full rounded-2xl border p-4 text-left transition-colors ${
                         isActive
-                          ? 'border-[#0284C7] bg-[#EFF6FF]'
-                          : 'border-[#DCE8F5] bg-[#F8FBFF] hover:bg-white'
+                          ? 'border-[#489BE2] bg-[#EBF5FD]'
+                          : 'border-[#E2E8F0] bg-[#F8FAFC] hover:bg-white'
                       }`}
                     >
                       <div className="flex items-center justify-between gap-2">
                         <span className="inline-flex items-center gap-2 font-display text-base font-bold text-[#0F2942]">
                           <MapPin
                             className={`h-4 w-4 shrink-0 ${
-                              isActive ? 'text-[#EA580C]' : 'text-[#0284C7]'
+                              isActive ? 'text-[#F97316]' : 'text-[#489BE2]'
                             }`}
                           />
                           Sunat Nano {branch.cityLabel}
@@ -653,7 +697,7 @@ export const BranchLocationsSection: React.FC<BranchLocationsSectionProps> = ({
               </div>
 
               <div className="mt-5 flex items-start gap-3 text-sm text-[#475569]">
-                <Home className="mt-0.5 h-5 w-5 shrink-0 text-[#0D9488]" />
+                <Home className="mt-0.5 h-5 w-5 shrink-0 text-[#F2B029]" />
                 <span>
                   Tersedia layanan Home Visit ke rumah tanpa biaya antre di area Bangkalan,
                   Surabaya, Sidoarjo, dan sekitarnya.
@@ -665,7 +709,7 @@ export const BranchLocationsSection: React.FC<BranchLocationsSectionProps> = ({
               <button
                 type="button"
                 onClick={() => onConsult(`Tanya Jadwal Cabang ${activeBranch.cityLabel}`)}
-                className="inline-flex min-h-[48px] flex-1 sm:flex-none items-center justify-center gap-2 rounded-2xl bg-[#0284C7] px-6 py-3.5 text-base font-bold text-white hover:bg-[#0369A1] transition-colors whitespace-nowrap shrink-0"
+                className="inline-flex min-h-[48px] flex-1 sm:flex-none items-center justify-center gap-2 rounded-2xl bg-[#489BE2] px-6 py-3.5 text-base font-bold text-white hover:bg-[#3182CE] transition-colors whitespace-nowrap shrink-0"
               >
                 <MessageCircle className="h-5 w-5" />
                 <span>Tanya Jadwal via WhatsApp</span>
@@ -675,7 +719,7 @@ export const BranchLocationsSection: React.FC<BranchLocationsSectionProps> = ({
                 href={activeData.googleMapsUri || activeBranch.mapsSearchUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-2xl border border-[#DCE8F5] bg-white px-5 py-3.5 text-sm font-bold text-[#0369A1] hover:bg-[#EFF6FF] transition-colors whitespace-nowrap shrink-0"
+                className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-2xl border border-[#FDBA74] bg-[#FFF7ED] px-5 py-3.5 text-sm font-bold text-[#EA580C] hover:bg-[#FFEDD5] transition-colors whitespace-nowrap shrink-0"
               >
                 <Navigation className="h-4 w-4" />
                 <span>Rute Google Maps</span>
@@ -684,9 +728,9 @@ export const BranchLocationsSection: React.FC<BranchLocationsSectionProps> = ({
           </div>
 
           {/* Right: Live Interactive Google Map */}
-          <div className="flex flex-col justify-between rounded-3xl border border-[#DCE8F5] bg-white p-4 shadow-[var(--shadow-card)] lg:col-span-6">
+          <div className="flex flex-col justify-between rounded-3xl border border-[#E2E8F0] bg-white p-4 shadow-[var(--shadow-card)] lg:col-span-6">
             {hasApiKey ? (
-              <div className="h-[380px] sm:h-[460px] w-full overflow-hidden rounded-2xl border border-[#DCE8F5]">
+              <div className="h-[380px] sm:h-[460px] w-full overflow-hidden rounded-2xl border border-[#E2E8F0]">
                 <GoogleMap
                   defaultCenter={{ lat: -7.2575, lng: 112.7521 }}
                   defaultZoom={10}
@@ -716,8 +760,8 @@ export const BranchLocationsSection: React.FC<BranchLocationsSectionProps> = ({
                 </GoogleMap>
               </div>
             ) : (
-              <div className="flex h-[380px] sm:h-[460px] flex-col items-center justify-center rounded-2xl bg-[#EFF6FF] p-8 text-center">
-                <MapPin className="h-10 w-10 text-[#0284C7]" />
+              <div className="flex h-[380px] sm:h-[460px] flex-col items-center justify-center rounded-2xl bg-[#EBF5FD] p-8 text-center">
+                <MapPin className="h-10 w-10 text-[#489BE2]" />
                 <p className="mt-3 font-display text-lg font-bold text-[#0F2942]">
                   Lokasi Google Maps Sunat Nano
                 </p>
@@ -729,7 +773,7 @@ export const BranchLocationsSection: React.FC<BranchLocationsSectionProps> = ({
                   href={activeBranch.mapsSearchUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-5 inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-[#0284C7] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#0369A1]"
+                  className="mt-5 inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-[#489BE2] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#3182CE]"
                 >
                   <span>Buka di Google Maps</span>
                   <ExternalLink className="h-4 w-4" />
@@ -741,7 +785,7 @@ export const BranchLocationsSection: React.FC<BranchLocationsSectionProps> = ({
               <span>
                 Menampilkan: <strong className="text-[#0F2942]">Sunat Nano {activeBranch.cityLabel}</strong>
               </span>
-              <span className="font-bold text-[#0D9488]">
+              <span className="font-bold text-[#EA580C]">
                 Klik pin di peta untuk detail &amp; arah
               </span>
             </div>

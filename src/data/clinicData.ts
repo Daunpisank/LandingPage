@@ -1,8 +1,8 @@
 export const WHATSAPP_CONFIG = {
-  // Ganti nomor di bawah ini dengan nomor WhatsApp admin Klinik Sunat Nano yang aktif (format internasional tanpa '+' atau spasi)
-  phoneNumber: '628XXXXXXXXXX',
+  phoneNumber: '6285236959788',
+  displayNumber: '0852-3695-9788',
   defaultMessage:
-    'Halo Admin, saya ingin konsultasi gratis tentang sunat anak.',
+    'Halo Admin Sunat Nano, saya ingin konsultasi gratis tentang layanan sunat anak.',
 };
 
 export function buildWhatsAppLink(customMessage?: string): string {
@@ -14,6 +14,24 @@ export const ASSETS = {
   mascotLogo: '/assets/aistudio/WhatsApp_Image_2026-07-15_at_14.33.22_7ea65c16.jpeg',
   pricelistPoster: '/assets/aistudio/Pricelist_lengkap_2c1365d3.jpg',
 };
+
+export const HERO_GALLERY_PHOTOS = [
+  {
+    src: '/assets/aistudio/34_4c33e57f.jpg',
+    alt: 'Keluarga dan anak tersenyum ceria bersama di Sunat Nano Circumcision',
+    caption: 'Suasana klinik ceria & ramah keluarga',
+  },
+  {
+    src: '/assets/aistudio/25_e5982afa.jpg',
+    alt: 'Anak ceria memegang sertifikat dan hadiah mobil remote di Sunat Nano Circumcision',
+    caption: 'Pulang bawa sertifikat & Mobil Remote gratis',
+  },
+  {
+    src: '/assets/aistudio/28_779a9ad9.jpg',
+    alt: 'Momen bahagia orang tua dan bayi setelah layanan sunat di Sunat Nano Circumcision',
+    caption: 'Pendampingan dokter lembut dari bayi hingga remaja',
+  },
+];
 
 export type PatientCategory = 'reguler' | 'gemuk' | 'abk' | 'dewasa';
 
@@ -46,6 +64,111 @@ export const PATIENT_CATEGORIES: CategoryOption[] = [
   },
 ];
 
+export interface CoreMethodItem {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  highlight: string;
+  iconKey: 'sealer' | 'painless' | 'stitchfree';
+}
+
+export const CORE_METHODS: CoreMethodItem[] = [
+  {
+    id: 'bipolar-teknosealer',
+    title: 'Bipolar Teknosealer',
+    subtitle: 'Glans Pro Bipolar Pen Sealer',
+    description:
+      'Teknologi penyegel jaringan presisi tinggi yang meminimalkan risiko perdarahan sekaligus memberikan hasil estetis dan simetris tanpa trauma jaringan berlebih.',
+    highlight: 'Proses singkat 10–20 menit',
+    iconKey: 'sealer',
+  },
+  {
+    id: 'minim-nyeri',
+    title: 'Minim Nyeri',
+    subtitle: 'Bius Tanpa Jarum Suntik',
+    description:
+      'Menggunakan teknologi bius tanpa jarum suntik bertekanan lembut yang bersahabat bagi anak. Didukung suasana ceria sehingga si kecil tetap tenang tanpa rasa takut.',
+    highlight: 'Anak tetap santai & boleh main',
+    iconKey: 'painless',
+  },
+  {
+    id: 'tanpa-jahitan',
+    title: 'Tanpa Jahitan',
+    subtitle: 'Cepat Pulih & Praktis Dirawat',
+    description:
+      'Tidak memerlukan benang jahit yang harus dicabut ataupun perban tebal yang merepotkan. Luka lebih cepat mengering dan anak bisa beraktivitas ringan lebih awal.',
+    highlight: 'Tanpa cabut benang pasca sunat',
+    iconKey: 'stitchfree',
+  },
+];
+
+export interface ServiceCategoryItem {
+  id: string;
+  title: string;
+  ageOrScope: string;
+  description: string;
+  topicPrompt: string;
+  iconKey: 'baby' | 'child' | 'teen' | 'adult' | 'revision' | 'home';
+}
+
+export const SERVICE_CATEGORIES: ServiceCategoryItem[] = [
+  {
+    id: 'bayi',
+    title: 'Sunat Bayi',
+    ageOrScope: 'Usia 0 – 12 Bulan',
+    description:
+      'Penanganan super lembut dan higienis oleh dokter berpengalaman. Pemulihan jaringan bayi berlangsung sangat cepat dengan minim rewel.',
+    topicPrompt: 'Layanan Sunat Bayi',
+    iconKey: 'baby',
+  },
+  {
+    id: 'anak',
+    title: 'Sunat Anak',
+    ageOrScope: 'Reguler · Gemuk · ABK',
+    description:
+      'Melayani anak reguler, sunat anak gemuk tanpa diet ketat, hingga anak berkebutuhan khusus (ABK). Termasuk hadiah Mobil Remote gratis.',
+    topicPrompt: 'Layanan Sunat Anak (Reguler / Gemuk / ABK)',
+    iconKey: 'child',
+  },
+  {
+    id: 'remaja',
+    title: 'Sunat Remaja',
+    ageOrScope: 'Usia SMP – SMA',
+    description:
+      'Metode presisi dengan hasil rapi dan estetis. Pemulihan cepat agar remaja dapat segera kembali sekolah dan beraktivitas seperti biasa.',
+    topicPrompt: 'Layanan Sunat Remaja',
+    iconKey: 'teen',
+  },
+  {
+    id: 'dewasa',
+    title: 'Sunat Dewasa',
+    ageOrScope: 'Privat & Higienis',
+    description:
+      'Ditangani secara profesional di ruang tindakan privat untuk kenyamanan penuh, minim nyeri, dan masa pemulihan yang terukur.',
+    topicPrompt: 'Layanan Sunat Dewasa',
+    iconKey: 'adult',
+  },
+  {
+    id: 'perbaikan',
+    title: 'Sunat Perbaikan',
+    ageOrScope: 'Revisi Hasil Sebelumnya',
+    description:
+      'Konsultasi dan tindakan koreksi bagi pasien dengan hasil sunat sebelumnya yang kurang rapi atau belum optimal agar nyaman secara medis maupun estetis.',
+    topicPrompt: 'Layanan Sunat Perbaikan / Revisi',
+    iconKey: 'revision',
+  },
+  {
+    id: 'home-visit',
+    title: 'Layanan Home Visit',
+    ageOrScope: 'Dokter Datang ke Rumah',
+    description:
+      'Nikmati kenyamanan dan privasi maksimal tanpa perlu keluar rumah atau antre. Tim dokter membawa peralatan steril lengkap ke lokasi Anda.',
+    topicPrompt: 'Layanan Home Visit ke Rumah',
+    iconKey: 'home',
+  },
+];
+
 export interface MethodPackage {
   id: string;
   name: string;
@@ -60,7 +183,7 @@ export const METHOD_PACKAGES: MethodPackage[] = [
   {
     id: 'bipolar-vip',
     name: 'Glans Pro Bipolar Pen Sealer VIP',
-    shortTag: 'Tanpa Jahitan · Minim Rasa Tidak Nyaman',
+    shortTag: 'Tanpa Jahitan · Pemulihan Tercepat',
     highlight: 'Pilihan Favorit Orang Tua',
     summary:
       'Teknologi Bipolar Pen Sealer presisi tinggi dengan pemulihan paling cepat, tanpa jahitan, tanpa perban, dan pendampingan penuh.',
@@ -134,91 +257,54 @@ export const METHOD_PACKAGES: MethodPackage[] = [
   },
 ];
 
-export interface WhyChooseItem {
+export interface ParentTestimonial {
   id: string;
-  number: string;
-  title: string;
-  description: string;
-  detail: string;
-  tone: 'sky' | 'warm' | 'teal' | 'indigo';
-  featured?: boolean;
+  parentName: string;
+  cityAndService: string;
+  rating: number;
+  quote: string;
+  photoSrc?: string;
+  photoAlt?: string;
 }
 
-export const WHY_CHOOSE_ITEMS: WhyChooseItem[] = [
+export const PARENT_TESTIMONIALS: ParentTestimonial[] = [
   {
-    id: 'minim-nyeri',
-    number: '01',
-    title: 'Bius Tanpa Jarum Suntik & Bipolar Sealer',
-    description:
-      'Kami memahami ketakutan terbesar anak adalah jarum suntik. Sunat Nano menggunakan teknik bius tanpa jarum suntik bertekanan lembut, dipadukan dengan metode Glans Pro Bipolar Pen Sealer atau Nano Klamp.',
-    detail: 'Minim rasa tidak nyaman · Pendarahan sangat minimal',
-    tone: 'sky',
-    featured: true,
+    id: 'testi-1',
+    parentName: 'Bunda Rina & Ayah Dimas',
+    cityAndService: 'Surabaya · Paket Bipolar VIP',
+    rating: 5,
+    quote:
+      'Awalnya anak saya takut banget dengar kata sunat, tapi di Sunat Nano suasananya ceria. Biusnya tanpa jarum suntik jadi tidak menangis, pulangnya senang sekali bawa mobil remote.',
+    photoSrc: '/assets/aistudio/34_4c33e57f.jpg',
+    photoAlt: 'Keluarga dan anak tersenyum ceria bersama di Sunat Nano Circumcision',
   },
   {
-    id: 'ramah-anak',
-    number: '02',
-    title: 'Anak Nyaman, Boleh Bawa Mainan & Nonton',
-    description:
-      'Suasana klinik dirancang ceria dan hangat, bukan seperti ruang tindakan medis yang kaku. Anak boleh membawa mainan kesayangan, menonton film favorit, bermain konsol, dan pulang membawa hadiah Mobil Remote gratis.',
-    detail: 'Ruang bermain ramah anak · Free Mobil Remote',
-    tone: 'warm',
+    id: 'testi-2',
+    parentName: 'Ayah Hendra Saputra',
+    cityAndService: 'Sidoarjo · Sunat Anak Gemuk',
+    rating: 5,
+    quote:
+      'Dokternya sangat sabar menjelaskan step by step ke orang tua dan anak. Tanpa jahitan benar-benar praktis dirawat di rumah, hari ketiga anak sudah aktif lagi.',
+    photoSrc: '/assets/aistudio/25_e5982afa.jpg',
+    photoAlt: 'Anak tersenyum memegang sertifikat dan mobil remote di Sunat Nano',
   },
   {
-    id: 'tanpa-jahitan',
-    number: '03',
-    title: 'Tanpa Jahitan & Tanpa Perban Rumit',
-    description:
-      'Dengan teknologi Bipolar Pen Sealer maupun Nano Klamp, anak tidak perlu melalui proses cabut benang atau ganti perban yang merepotkan. Pemulihan lebih cepat dan anak bisa beraktivitas ringan lebih awal.',
-    detail: 'Proses singkat 10–20 menit · Perawatan praktis',
-    tone: 'teal',
+    id: 'testi-3',
+    parentName: 'Bunda Siti Aminah',
+    cityAndService: 'Bangkalan · Sunat Bayi',
+    rating: 5,
+    quote:
+      'Alhamdulillah sunat bayi di sini sangat tenang, ruangannya bersih, tim medisnya ramah sekali. Konsultasi pasca sunat via WhatsApp juga selalu dijawab cepat oleh dokter.',
+    photoSrc: '/assets/aistudio/28_779a9ad9.jpg',
+    photoAlt: 'Orang tua dan bayi berfoto bersama sertifikat di Sunat Nano',
   },
   {
-    id: 'pendampingan',
-    number: '04',
-    title: 'Pendampingan Penuh dari Awal hingga Pulih',
-    description:
-      'Mulai dari konsultasi gratis sebelum hari H, tim dokter yang sabar mengajak ngobrol si kecil, hingga pemantauan pasca tindakan via WhatsApp sampai Ayah dan Bunda merasa tenang.',
-    detail: 'Melayani Anak Reguler, Gemuk, ABK & Home Visit',
-    tone: 'indigo',
-  },
-];
-
-export interface ProcessStep {
-  step: string;
-  title: string;
-  duration: string;
-  description: string;
-}
-
-export const PROCESS_STEPS: ProcessStep[] = [
-  {
-    step: '01',
-    title: 'Konsultasi Gratis & Pilih Jadwal',
-    duration: 'Sebelum Kunjungan',
-    description:
-      'Ayah dan Bunda berdiskusi santai dengan tim kami via WhatsApp mengenai usia anak, kondisi khusus (seperti anak gemuk atau ABK), serta metode yang paling sesuai.',
-  },
-  {
-    step: '02',
-    title: 'Pemeriksaan & Persiapan Ceria',
-    duration: '10 Menit',
-    description:
-      'Anak disambut ramah, diajak memilih tontonan atau mainan kesayangan. Dokter menjelaskan setiap langkah kepada Anda dan anak sebelum memberikan bius tanpa jarum suntik.',
-  },
-  {
-    step: '03',
-    title: 'Tindakan Cepat & Tenang',
-    duration: '10–20 Menit',
-    description:
-      'Tindakan dilakukan oleh dokter berpengalaman dengan Glans Pro Bipolar Pen Sealer atau Nano Klamp tanpa jahitan. Anak tetap santai didampingi orang tua.',
-  },
-  {
-    step: '04',
-    title: 'Pulang Bawa Mobil Remote & Kontrol Ringan',
-    duration: 'Pasca Tindakan',
-    description:
-      'Anak mendapat hadiah Mobil Remote gratis, panduan perawatan rumah yang sederhana, serta akses konsultasi lanjutan dengan dokter hingga pulih tuntas.',
+    id: 'testi-4',
+    parentName: 'Bunda Nadia & Keluarga',
+    cityAndService: 'Surabaya · Layanan Home Visit',
+    rating: 5,
+    quote:
+      'Pilih layanan Home Visit karena ingin privasi dan anak lebih nyaman di kamar sendiri. Peralatan dokter steril lengkap, tindakan cepat 15 menit dan hasilnya rapi.',
   },
 ];
 
@@ -268,39 +354,39 @@ export interface FaqItem {
 
 export const FAQ_ITEMS: FaqItem[] = [
   {
-    id: 'faq-durasi',
-    question: 'Berapa lama proses sunat berlangsung?',
+    id: 'faq-nyeri',
+    question: 'Apakah sakit saat dibius dan saat tindakan sunat?',
     answer:
-      'Tindakan inti berjalan sangat singkat, sekitar 10 hingga 20 menit saja. Secara keseluruhan, Ayah dan Bunda cukup meluangkan waktu sekitar 45 menit termasuk sesi perkenalan agar anak rileks, pemeriksaan ringan, serta penjelasan perawatan di rumah.',
+      'Kami menggunakan teknologi bius tanpa jarum suntik sehingga anak tidak merasakan tusukan jarum yang menakutkan. Saat bius bekerja, area tindakan menjadi kebas dan anak hanya merasakan sentuhan ringan, sambil tetap ditemani orang tua, membawa mainan, atau menonton tayangan favorit.',
   },
   {
-    id: 'faq-nyeri',
-    question: 'Apakah anak akan merasakan sakit saat dibius atau saat tindakan?',
+    id: 'faq-pemulihan',
+    question: 'Berapa lama pemulihan setelah sunat di Sunat Nano?',
     answer:
-      'Kami menggunakan teknologi bius tanpa jarum suntik sehingga anak tidak merasakan tusukan jarum yang menakutkan. Saat bius bekerja, area tindakan menjadi kebas dan anak hanya merasakan sentuhan ringan, sambil tetap ditemani orang tua atau menonton tayangan kesukaannya.',
+      'Dengan metode Bipolar Teknosealer maupun Nano Klamp yang tanpa jahitan, anak umumnya sudah nyaman beraktivitas ringan di rumah dalam 1–3 hari dan pulih optimal dalam 5–7 hari. Perawatan luka di rumah sangat praktis tanpa harus repot cabut benang.',
   },
   {
     id: 'faq-metode',
-    question: 'Metode apa yang digunakan dan mana yang paling aman untuk anak?',
+    question: 'Metode apa yang dipakai dan bagaimana menentukan pilihan terbaik?',
     answer:
-      'Seluruh metode kami aman, higienis, dan menggunakan alat steril sekali pakai. Tersedia dua pilihan utama: Glans Pro Bipolar Pen Sealer (tanpa jahitan, tanpa alat menempel, pemulihan sangat cepat) dan Nano Klamp (pelindung ringan tanpa jahitan). Dokter akan merekomendasikan metode terbaik sesuai usia dan kondisi anak saat konsultasi.',
+      'Sunat Nano menyediakan metode modern unggulan Glans Pro Bipolar Pen Sealer (tanpa jahitan dan tanpa alat menempel) serta Nano Klamp (pelindung ringan bebas aktivitas). Dokter akan memeriksa kondisi anatomis dan merekomendasikan metode paling aman saat sesi konsultasi.',
   },
   {
-    id: 'faq-perawatan',
-    question: 'Bagaimana perawatan luka di rumah agar anak cepat pulih?',
+    id: 'faq-durasi',
+    question: 'Berapa lama proses sunat berlangsung dari datang hingga selesai?',
     answer:
-      'Perawatannya sangat praktis karena tanpa jahitan konvensional dan tanpa perban tebal. Orang tua akan dibekali panduan tertulis yang jelas serta obat pereda nyeri ringan. Tim kami juga tetap mendampingi melalui WhatsApp jika Ayah atau Bunda ingin berkirim foto perkembangan pemulihan.',
+      'Tindakan inti berjalan singkat sekitar 10 hingga 20 menit saja. Secara keseluruhan, Ayah dan Bunda cukup meluangkan waktu sekitar 45 menit termasuk sesi perkenalan agar anak rileks, pemeriksaan dokter, serta edukasi perawatan pasca sunat.',
   },
   {
     id: 'faq-khusus',
-    question: 'Apakah tersedia layanan untuk anak gemuk, anak ABK, atau home visit ke rumah?',
+    question: 'Apakah melayani bayi, anak gemuk, anak ABK, dewasa, atau Home Visit?',
     answer:
-      'Ya, tersedia. Kami memiliki penanganan khusus untuk Sunat Gemuk (tanpa harus menunda atau memaksa anak diet dulu) serta pendekatan khusus yang sangat sabar untuk Anak Berkebutuhan Khusus (ABK). Tersedia pula layanan Home Visit bagi keluarga yang menginginkan privasi dan kenyamanan penuh di rumah.',
+      'Ya, kami melayani seluruh kelompok usia mulai dari sunat bayi, anak reguler, sunat gemuk (tanpa harus diet dulu), anak berkebutuhan khusus (ABK), sunat remaja & dewasa, hingga sunat perbaikan. Tersedia juga layanan Home Visit bagi keluarga yang memilih tindakan di rumah.',
   },
   {
     id: 'faq-hadiah',
-    question: 'Apakah anak boleh membawa mainan dan benar-benar mendapat Mobil Remote gratis?',
+    question: 'Apakah anak benar-benar mendapat hadiah Mobil Remote gratis?',
     answer:
-      'Tentu saja! Anak sangat dianjurkan membawa mainan, boneka, atau bantal kesayangan agar merasa seperti di rumah sendiri. Setiap anak yang selesai menjalani tindakan di Sunat Nano berhak memilih dan membawa pulang hadiah Mobil Remote gratis sebagai apresiasi keberaniannya.',
+      'Benar! Setiap anak yang selesai menjalani tindakan sunat di Sunat Nano berhak membawa pulang hadiah Mobil Remote gratis serta sertifikat keberanian agar momen sunat menjadi kenangan yang membanggakan.',
   },
 ];

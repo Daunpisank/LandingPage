@@ -61,7 +61,7 @@ export const WhatsAppModal: React.FC<WhatsAppModalProps> = ({
           <X className="h-5 w-5" />
         </button>
 
-        <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ECFDF5] text-[#0D9488]">
+        <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#EBF5FD] text-[#489BE2]">
           <MessageCircle className="h-6 w-6" />
         </div>
 
@@ -77,13 +77,13 @@ export const WhatsAppModal: React.FC<WhatsAppModalProps> = ({
         </p>
 
         {contextTopic && (
-          <div className="mt-4 rounded-xl bg-[#EFF6FF] px-4 py-3 text-sm text-[#0369A1]">
+          <div className="mt-4 rounded-xl bg-[#FFFBEB] border border-[#FDE68A] px-4 py-3 text-sm text-[#B45309]">
             <span className="font-semibold">Topik pilihan:</span> {contextTopic}
           </div>
         )}
 
         <div className="mt-5 flex items-center gap-2 text-xs text-[#475569]">
-          <ShieldCheck className="h-4 w-4 shrink-0 text-[#0D9488]" />
+          <ShieldCheck className="h-4 w-4 shrink-0 text-[#F97316]" />
           <span>Privasi keluarga terjaga · Respon ramah oleh tim klinik</span>
         </div>
 
@@ -93,7 +93,7 @@ export const WhatsAppModal: React.FC<WhatsAppModalProps> = ({
             target="_blank"
             rel="noopener noreferrer"
             onClick={onClose}
-            className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-[#0D9488] px-6 py-3 text-base font-bold text-white shadow-sm hover:bg-[#0F766E] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0D9488]"
+            className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-[#489BE2] px-6 py-3 text-base font-bold text-white shadow-sm hover:bg-[#3182CE] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#489BE2]"
           >
             <span>Lanjut ke WhatsApp</span>
             <ArrowUpRight className="h-4 w-4" />
@@ -189,7 +189,7 @@ export const PricelistModal: React.FC<PricelistModalProps> = ({
               onClose();
               onConsult('Tanya Paket & Jadwal Sunat Nano');
             }}
-            className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-[#EA580C] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#C2410C] transition-colors whitespace-nowrap shrink-0"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-[#489BE2] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#3182CE] transition-colors whitespace-nowrap shrink-0"
           >
             Konsultasi Gratis
           </button>
