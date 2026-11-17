@@ -1,0 +1,348 @@
+@import "tailwindcss";
+
+:root {
+  /* Palet warna hangat & tepercaya (kontras >= 4.5:1) */
+  --color-canvas: #F8FBFF;
+  --color-surface: #FFFFFF;
+  --color-surface-soft: #EFF6FF;
+  --color-surface-teal: #F0FDFA;
+  --color-surface-warm: #FFFBEB;
+  --color-border: #DCE8F5;
+
+  --color-heading: #0B4F6C;
+  --color-heading-accent: #C2410C;
+  --color-ink: #0F2942;
+  --color-body: #334155;
+  --color-ink-muted: #475569;
+
+  --color-primary: #0284C7;
+  --color-primary-dark: #0369A1;
+  --color-teal: #0F766E;
+  --color-accent: #C2410C;
+  --color-accent-hover: #9A3412;
+  --color-warm: #F59E0B;
+
+  /* Sistem Tipografi: Maksimal 2 Font Family */
+  --font-heading: 'Fredoka', system-ui, -apple-system, sans-serif;
+  --font-body: 'Nunito', system-ui, -apple-system, sans-serif;
+
+  /* Skala Ukuran Responsif clamp() (Body min 16px di semua breakpoint) */
+  --text-h1: clamp(2rem, 4vw, 3.5rem);
+  --text-h2: clamp(1.5rem, 2.6vw, 2.25rem);
+  --text-h3: clamp(1.25rem, 1.8vw, 1.5rem);
+  --text-h4: clamp(1.125rem, 1.4vw, 1.25rem);
+  --text-h5: clamp(1.0625rem, 1.2vw, 1.125rem);
+  --text-h6: 1rem;
+  --text-body: clamp(1rem, 0.3vw + 0.95rem, 1.0625rem);
+  --text-subheadline: clamp(1.0625rem, 0.6vw + 0.95rem, 1.25rem);
+  --text-footer: 0.875rem;
+
+  /* Line-height & Tracking */
+  --leading-heading: 1.15;
+  --leading-h1: 1.1;
+  --leading-body: 1.65;
+  --tracking-heading: -0.01em;
+  --tracking-body: 0em;
+
+  --radius-card: 1.5rem;
+  --radius-inner: 1rem;
+  --shadow-soft: 0 10px 30px -10px rgba(15, 41, 66, 0.08);
+  --shadow-card: 0 4px 20px -4px rgba(2, 132, 199, 0.08);
+}
+
+@layer base {
+  html {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: var(--leading-body);
+    letter-spacing: var(--tracking-body);
+    color: var(--color-body);
+    background-color: var(--color-canvas);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    font-weight: 400;
+    line-height: var(--leading-body);
+    color: var(--color-body);
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-display, .font-heading {
+    font-family: var(--font-heading);
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-heading);
+    color: var(--color-heading);
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
+  h1 {
+    font-size: var(--text-h1);
+    font-weight: 600;
+    line-height: var(--leading-h1);
+  }
+
+  h2 {
+    font-size: var(--text-h2);
+    font-weight: 600;
+  }
+
+  h3 {
+    font-size: var(--text-h3);
+    font-weight: 600;
+  }
+
+  h4 {
+    font-size: var(--text-h4);
+    font-weight: 600;
+  }
+
+  h5 {
+    font-size: var(--text-h5);
+    font-weight: 600;
+  }
+
+  h6 {
+    font-size: var(--text-h6);
+    font-weight: 600;
+  }
+
+  p {
+    max-width: 68ch;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+}
+
+/* Kelas utilitas sistem tipografi elemen */
+.typo-brand {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: 3px;
+}
+
+.brand-wordmark-spaced {
+  letter-spacing: 3px;
+}
+
+/* Efek stabilo/spidol kuning di belakang kata "Cepat Sembuh" */
+.hero-marker-highlight {
+  position: relative;
+  display: inline-block;
+  color: #0F766E;
+  z-index: 1;
+  white-space: nowrap;
+}
+
+.hero-marker-highlight::after {
+  content: "";
+  position: absolute;
+  left: -0.06em;
+  right: -0.06em;
+  bottom: 0.04em;
+  height: 0.34em;
+  background-color: #FACC15;
+  border-radius: 9999px;
+  transform: rotate(-1.5deg);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.typo-h1 {
+  font-family: var(--font-heading);
+  font-size: var(--text-h1);
+  font-weight: 600;
+  line-height: var(--leading-h1);
+  letter-spacing: var(--tracking-heading);
+  color: var(--color-heading);
+  text-wrap: balance;
+}
+
+.typo-h2 {
+  font-family: var(--font-heading);
+  font-size: var(--text-h2);
+  font-weight: 600;
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+  color: var(--color-heading);
+  text-wrap: balance;
+}
+
+.typo-accent-word {
+  color: var(--color-heading-accent);
+}
+
+.typo-subheadline {
+  font-family: var(--font-body);
+  font-size: var(--text-subheadline);
+  font-weight: 500;
+  line-height: 1.65;
+  color: var(--color-body);
+  max-width: 60ch;
+}
+
+.typo-cta {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: 0em;
+  text-transform: none;
+}
+
+.typo-stat-number {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: var(--tracking-heading);
+  font-variant-numeric: tabular-nums;
+}
+
+.typo-stat-label {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-body);
+}
+
+.typo-card-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-h3);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: var(--tracking-heading);
+  color: var(--color-heading);
+}
+
+.typo-card-desc {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: var(--leading-body);
+  color: var(--color-body);
+}
+
+.typo-faq-question {
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--color-ink);
+}
+
+.typo-faq-answer {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: var(--leading-body);
+  color: var(--color-body);
+}
+
+.typo-footer {
+  font-family: var(--font-body);
+  font-size: var(--text-footer);
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.headline-balance {
+  text-wrap: balance;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Galeri Hero: Fade-to-White sisi kiri & animasi slideshow ala layar kunci iPhone */
+.hero-gallery-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-height: 520px;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 20px 45px -15px rgba(15, 41, 66, 0.14);
+  background-color: #ffffff;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 16%, black 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 16%, black 100%);
+}
+
+.hero-gallery-fade-left {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 28%;
+  background: linear-gradient(
+    to right,
+    #F8FBFF 0%,
+    rgba(248, 251, 255, 0.78) 38%,
+    rgba(248, 251, 255, 0) 100%
+  );
+  z-index: 10;
+  pointer-events: none;
+}
+
+.hero-gallery-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 28px;
+  opacity: 0;
+  transform: scale(1);
+  animation: iphoneLockSlide 18s ease-in-out infinite;
+  will-change: opacity, transform;
+}
+
+.hero-gallery-slide:nth-of-type(1) {
+  animation-delay: -1.2s;
+}
+
+.hero-gallery-slide:nth-of-type(2) {
+  animation-delay: 4.8s;
+}
+
+.hero-gallery-slide:nth-of-type(3) {
+  animation-delay: 10.8s;
+}
+
+@keyframes iphoneLockSlide {
+  0% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  7% {
+    opacity: 1;
+    transform: scale(1.015);
+  }
+  33% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  40% {
+    opacity: 0;
+    transform: scale(1.075);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .hero-gallery-slide:first-of-type {
+    opacity: 1;
+  }
+}
