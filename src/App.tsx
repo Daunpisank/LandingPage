@@ -65,6 +65,25 @@ const INITIAL_BRANCHES_DATA: Record<ClinicBranchConfig['id'], BranchPlaceData> =
 
 const TEASER_SERVICE_IDS = ['bayi', 'anak', 'dewasa'] as const;
 
+const BERANDA_AUTO_GALLERY_PHOTOS = [
+  {
+    src: '/assets/aistudio/WhatsApp_Image_2026-07-27_at_09.54.39_bb3845ee.webp',
+    alt: 'Anak tenang bermain game didampingi orang tua di ruang tindakan Sunat Nano Circumcision',
+  },
+  {
+    src: '/assets/aistudio/WhatsApp_Image_2026-09-23_at_09.39.36_fbffa574.webp',
+    alt: 'Keluarga dan anak tersenyum memegang sertifikat VIP dan hadiah mobil remote di Sunat Nano Circumcision',
+  },
+  {
+    src: '/assets/aistudio/toy_unboxing_square_88cf19f6.webp',
+    alt: 'Anak ceria unboxing hadiah mobil remote RC Sideway Car dari Sunat Nano Circumcision',
+  },
+  {
+    src: '/assets/aistudio/WhatsApp_Image_2026-10-01_at_15.00.44_85b1cf7f.webp',
+    alt: 'Keluarga bahagia membawa pulang sertifikat dan mobil remote di Sunat Nano Circumcision',
+  },
+] as const;
+
 type PageId = 'beranda' | 'metode' | 'layanan' | 'galeri';
 
 const NAV_LINKS: Array<{ id: PageId; href: string; emoji: string; label: string }> = [
@@ -121,6 +140,23 @@ export default function App() {
   const [expandedMethodIds, setExpandedMethodIds] = useState<Record<string, boolean>>({});
   const [expandedPackageIds, setExpandedPackageIds] = useState<Record<string, boolean>>({});
   const [mascotError, setMascotError] = useState(false);
+  const [activeHeroSlide, setActiveHeroSlide] = useState(0);
+  const [activeGallerySlide, setActiveGallerySlide] = useState(0);
+
+  useEffect(() => {
+    const heroInterval = window.setInterval(() => {
+      setActiveHeroSlide((prev) => (prev + 1) % HERO_GALLERY_PHOTOS.length);
+    }, 4200);
+
+    const galleryInterval = window.setInterval(() => {
+      setActiveGallerySlide((prev) => (prev + 1) % BERANDA_AUTO_GALLERY_PHOTOS.length);
+    }, 4800);
+
+    return () => {
+      window.clearInterval(heroInterval);
+      window.clearInterval(galleryInterval);
+    };
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -377,7 +413,7 @@ export default function App() {
                       membawa hadiah Mobil Remote gratis.
                     </p>
 
-                    <div className="mt-8 flex flex-wrap items-center gap-4">
+                    <div className="hero-cta-group mt-8 flex flex-wrap items-center gap-4">
                       <button
                         type="button"
                         onClick={() => openConsultation()}
@@ -396,7 +432,7 @@ export default function App() {
                     </div>
 
                     {/* Unboxed Trust Line */}
-                    <div className="hero-text-shadow mt-8 flex flex-wrap items-center gap-x-6 gap-y-2.5 border-t border-[#E2E8F0] pt-6 text-sm font-semibold text-[#334155]">
+                    <div className="hero-trust-line hero-text-shadow mt-8 flex flex-wrap items-center gap-x-6 gap-y-2.5 border-t border-[#E2E8F0] pt-6 text-sm font-semibold text-[#334155]">
                       <span className="inline-flex items-center gap-2">
                         <Stethoscope className="h-4 w-4 text-[#489BE2]" />
                         Dokter Berpengalaman
@@ -412,16 +448,16 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Hero Right Visual: Galeri Foto Slider + Maskot Kucing (Drop-Shadow 3D) */}
+                  {/* Hero Right Visual: Galeri Foto Slider + Maskot Kucing (Fade-Away Desktop + Slider Mobile) */}
                   <div className="hero-right-visual flex flex-col justify-center lg:col-span-6">
-                    <div className="hero-gallery-frame border-2 border-white/80">
-                      {HERO_GALLERY_PHOTOS.map((photo) => (
+                    <div className="hero-gallery-frame">
+                      {HERO_GALLERY_PHOTOS.map((photo, idx) => (
                         <img
                           key={photo.src}
                           src={photo.src}
                           alt={photo.alt}
                           referrerPolicy="no-referrer"
-                          className="hero-gallery-slide"
+                          className={`hero-gallery-slide ${idx === activeHeroSlide ? 'active' : ''}`}
                         />
                       ))}
                     </div>
@@ -469,7 +505,7 @@ export default function App() {
             >
               <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
                 <div className="grid grid-cols-2 gap-6 lg:grid-cols-4 lg:gap-8">
-                  <div className="flex items-start gap-3.5">
+                  <div className="mobile-center-items flex items-start gap-3.5">
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#EBF5FD] text-[#489BE2]">
                       <Award className="h-5 w-5" />
                     </div>
@@ -479,7 +515,7 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3.5">
+                  <div className="mobile-center-items flex items-start gap-3.5">
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#FFFBEB] text-[#D97706]">
                       <Smile className="h-5 w-5 text-[#F2B029]" />
                     </div>
@@ -489,7 +525,7 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3.5">
+                  <div className="mobile-center-items flex items-start gap-3.5">
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#FFF7ED] text-[#F97316]">
                       <MessageCircle className="h-5 w-5" />
                     </div>
@@ -499,7 +535,7 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3.5">
+                  <div className="mobile-center-items flex items-start gap-3.5">
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#EBF5FD] text-[#489BE2]">
                       <Star className="h-5 w-5 fill-[#F2B029] text-[#F2B029]" />
                     </div>
@@ -541,30 +577,15 @@ export default function App() {
 
                 <div className="mt-10 mx-auto max-w-5xl">
                   <div className="auto-gallery-frame border-2 border-[#BFDBFE]">
-                    <img
-                      src="/assets/aistudio/WhatsApp_Image_2026-07-27_at_09.54.39_bb3845ee.webp"
-                      alt="Anak tenang bermain game didampingi orang tua di ruang tindakan Sunat Nano Circumcision"
-                      referrerPolicy="no-referrer"
-                      className="auto-gallery-slide"
-                    />
-                    <img
-                      src="/assets/aistudio/WhatsApp_Image_2026-09-23_at_09.39.36_fbffa574.webp"
-                      alt="Keluarga dan anak tersenyum memegang sertifikat VIP dan hadiah mobil remote di Sunat Nano Circumcision"
-                      referrerPolicy="no-referrer"
-                      className="auto-gallery-slide"
-                    />
-                    <img
-                      src="/assets/aistudio/toy_unboxing_square_88cf19f6.webp"
-                      alt="Anak ceria unboxing hadiah mobil remote RC Sideway Car dari Sunat Nano Circumcision"
-                      referrerPolicy="no-referrer"
-                      className="auto-gallery-slide"
-                    />
-                    <img
-                      src="/assets/aistudio/WhatsApp_Image_2026-10-01_at_15.00.44_85b1cf7f.webp"
-                      alt="Keluarga bahagia membawa pulang sertifikat dan mobil remote di Sunat Nano Circumcision"
-                      referrerPolicy="no-referrer"
-                      className="auto-gallery-slide"
-                    />
+                    {BERANDA_AUTO_GALLERY_PHOTOS.map((photo, idx) => (
+                      <img
+                        key={photo.src}
+                        src={photo.src}
+                        alt={photo.alt}
+                        referrerPolicy="no-referrer"
+                        className={`auto-gallery-slide ${idx === activeGallerySlide ? 'active' : ''}`}
+                      />
+                    ))}
                   </div>
                 </div>
               </div>
@@ -724,11 +745,11 @@ export default function App() {
           >
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute -top-24 right-0 h-[380px] w-[380px] rounded-full bg-[#489BE2]/15 blur-3xl"
+              className="mobile-bg-decor pointer-events-none absolute -top-24 right-0 h-[380px] w-[380px] rounded-full bg-[#489BE2]/15 blur-3xl"
             />
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute bottom-12 -left-24 h-[340px] w-[340px] rounded-full bg-[#F2B029]/15 blur-3xl"
+              className="mobile-bg-decor pointer-events-none absolute bottom-12 -left-24 h-[340px] w-[340px] rounded-full bg-[#F2B029]/15 blur-3xl"
             />
 
             <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
@@ -906,7 +927,7 @@ export default function App() {
                 </div>
 
                 {/* Package Cards */}
-                <div className="mt-8 grid gap-7 md:grid-cols-2">
+                <div className="mt-10 grid gap-x-7 gap-y-10 md:grid-cols-2">
                   {activePackages.map((pkg) => {
                     const price = pkg.prices[selectedCategory];
                     const isFavorite = Boolean(pkg.highlight);
@@ -1040,11 +1061,11 @@ export default function App() {
           >
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute -top-24 right-0 h-[380px] w-[380px] rounded-full bg-[#489BE2]/15 blur-3xl"
+              className="mobile-bg-decor pointer-events-none absolute -top-24 right-0 h-[380px] w-[380px] rounded-full bg-[#489BE2]/15 blur-3xl"
             />
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute bottom-0 -left-24 h-[340px] w-[340px] rounded-full bg-[#F2B029]/15 blur-3xl"
+              className="mobile-bg-decor pointer-events-none absolute bottom-0 -left-24 h-[340px] w-[340px] rounded-full bg-[#F2B029]/15 blur-3xl"
             />
 
             <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
@@ -1146,11 +1167,11 @@ export default function App() {
           >
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute -top-24 right-0 h-[380px] w-[380px] rounded-full bg-[#489BE2]/15 blur-3xl"
+              className="mobile-bg-decor pointer-events-none absolute -top-24 right-0 h-[380px] w-[380px] rounded-full bg-[#489BE2]/15 blur-3xl"
             />
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute bottom-0 -left-24 h-[340px] w-[340px] rounded-full bg-[#F2B029]/15 blur-3xl"
+              className="mobile-bg-decor pointer-events-none absolute bottom-0 -left-24 h-[340px] w-[340px] rounded-full bg-[#F2B029]/15 blur-3xl"
             />
 
             <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
