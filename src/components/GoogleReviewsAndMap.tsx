@@ -587,7 +587,7 @@ const MapCameraController: React.FC<{
     const selectedLoc = branchesData[selectedBranchId]?.location;
     if (selectedLoc) {
       map.panTo(selectedLoc);
-      map.setZoom(13);
+      map.setZoom(15);
       return;
     }
 
@@ -789,6 +789,343 @@ export const BranchLocationsSection: React.FC<BranchLocationsSectionProps> = ({
                 Klik pin di peta untuk detail &amp; arah
               </span>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+interface BerandaMapAndReviewsProps {
+  hasApiKey: boolean;
+  branchesData: Record<ClinicBranchConfig['id'], BranchPlaceData>;
+  selectedBranchId: ClinicBranchConfig['id'];
+  onSelectBranch: (id: ClinicBranchConfig['id']) => void;
+}
+
+export const BerandaMapAndReviewsSection: React.FC<BerandaMapAndReviewsProps> = ({
+  hasApiKey,
+  branchesData,
+  selectedBranchId,
+  onSelectBranch,
+}) => {
+  const [infoOpenBranchId, setInfoOpenBranchId] = useState<ClinicBranchConfig['id'] | null>(
+    selectedBranchId
+  );
+
+  useEffect(() => {
+    setInfoOpenBranchId(selectedBranchId);
+  }, [selectedBranchId]);
+
+  const activeBranch =
+    CLINIC_BRANCHES.find((b) => b.id === selectedBranchId) ?? CLINIC_BRANCHES[0];
+  const activeData = branchesData[selectedBranchId];
+  const mapsUrl = activeData.googleMapsUri || activeBranch.mapsSearchUrl;
+
+  return (
+    <section id="lokasi-ulasan" className="bg-transparent py-16 sm:py-24">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+          <div className="max-w-2xl">
+            <p className="text-base font-bold text-[#489BE2]">Terpercaya di Google Maps</p>
+            <h2 className="typo-h2 mt-2">
+              Lokasi Klinik &amp; <span className="typo-accent-word">Ulasan Orang Tua</span>
+            </h2>
+            <p className="typo-subheadline mt-3">
+              Kunjungi cabang klinik Sunat Nano terdekat atau baca pengalaman nyata Ayah dan Bunda
+              dari profil Google Maps resmi kami.
+            </p>
+          </div>
+
+          {/* Pemilih Cabang Peta & Ulasan */}
+          <div
+            role="tablist"
+            aria-label="Pilih Lokasi Cabang Klinik"
+            className="inline-flex flex-wrap gap-1.5 rounded-2xl bg-[#EBF5FD] p-1.5 border border-[#BFDBFE] self-start lg:self-auto"
+          >
+            {CLINIC_BRANCHES.map((branch) => {
+              const isActive = branch.id === selectedBranchId;
+              const branchLive = branchesData[branch.id];
+              return (
+                <button
+                  key={branch.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => onSelectBranch(branch.id)}
+                  className={`inline-flex min-h-[38px] items-center gap-1.5 rounded-xl px-4 py-1.5 text-sm font-bold transition-colors whitespace-nowrap shrink-0 ${
+                    isActive
+                      ? 'bg-[#489BE2] text-white shadow-sm'
+                      : 'text-[#475569] hover:text-[#0F2942]'
+                  }`}
+                >
+                  <span>{branch.cityLabel}</span>
+                  {typeof branchLive.rating === 'number' && (
+                    <span
+                      className={`inline-flex items-center gap-0.5 text-xs font-bold tabular-nums ${
+                        isActive ? 'text-[#FEF08A]' : 'text-[#D97706]'
+                      }`}
+                    >
+                      <Star className="h-3 w-3 fill-[#F2B029] text-[#F2B029]" />
+                      {branchLive.rating.toFixed(1)}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Layout 2 Kolom: Kiri Peta Interaktif Google Maps, Kanan Ulasan Google Maps */}
+        <div className="mt-10 grid items-stretch gap-8 lg:grid-cols-12">
+          {/* Kolom Kiri: Live Google Maps SDK */}
+          <div className="flex flex-col justify-between rounded-3xl border border-[#E2E8F0] bg-white p-4 sm:p-5 shadow-[var(--shadow-card)] lg:col-span-6">
+            {hasApiKey ? (
+              <div className="overflow-hidden rounded-2xl border border-[#E2E8F0] bg-[#EBF5FD] h-[340px] sm:h-[400px]">
+                <GoogleMap
+                  defaultCenter={{ lat: -7.2575, lng: 112.7521 }}
+                  defaultZoom={11}
+                  mapId="DEMO_MAP_ID"
+                  gestureHandling="cooperative"
+                  internalUsageAttributionIds={['gmp_mcp_codeassist_v1_aistudio']}
+                  style={{ width: '100%', height: '100%' }}
+                >
+                  <MapCameraController
+                    branchesData={branchesData}
+                    selectedBranchId={selectedBranchId}
+                  />
+                  {CLINIC_BRANCHES.map((branch) => (
+                    <BranchMarkerWithInfoWindow
+                      key={branch.id}
+                      branch={branch}
+                      data={branchesData[branch.id]}
+                      isSelected={branch.id === selectedBranchId}
+                      isInfoOpen={infoOpenBranchId === branch.id}
+                      onSelect={() => {
+                        onSelectBranch(branch.id);
+                        setInfoOpenBranchId(branch.id);
+                      }}
+                      onCloseInfo={() => setInfoOpenBranchId(null)}
+                    />
+                  ))}
+                </GoogleMap>
+              </div>
+            ) : (
+              <div className="overflow-hidden rounded-2xl border border-[#E2E8F0] bg-[#EBF5FD] h-[340px] sm:h-[400px]">
+                <iframe
+                  title={`Peta Lokasi ${activeBranch.searchQuery}`}
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent(
+                    activeBranch.searchQuery
+                  )}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
+                  className="h-full w-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                />
+              </div>
+            )}
+
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 px-1">
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="font-heading text-base font-bold text-[#0F2942]">
+                    {activeData.displayName || activeBranch.searchQuery}
+                  </p>
+                  {typeof activeData.rating === 'number' && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[#FFFBEB] border border-[#FDE68A] px-2.5 py-0.5 text-xs font-bold text-[#B45309] tabular-nums">
+                      <Star className="h-3 w-3 fill-[#F59E0B] text-[#F59E0B]" />
+                      {activeData.rating.toFixed(1)}
+                      {typeof activeData.userRatingCount === 'number' && (
+                        <span className="font-normal text-[#475569]">
+                          ({activeData.userRatingCount})
+                        </span>
+                      )}
+                    </span>
+                  )}
+                </div>
+                <p className="mt-0.5 text-xs sm:text-sm text-[#475569]">
+                  {activeData.formattedAddress || activeBranch.areaDescription}
+                </p>
+              </div>
+              <a
+                href={mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl border border-[#FDBA74] bg-[#FFF7ED] px-4 py-2 text-xs font-bold text-[#EA580C] hover:bg-[#FFEDD5] transition-colors whitespace-nowrap shrink-0"
+              >
+                <span>Buka Maps</span>
+                <ExternalLink className="h-3.5 w-3.5" />
+              </a>
+            </div>
+          </div>
+
+          {/* Kolom Kanan: Ulasan Nyata Google Maps (dengan Fallback) */}
+          <div className="flex flex-col justify-between gap-4 lg:col-span-6">
+            {activeData.status === 'loading' && (
+              <>
+                {[0, 1, 2].map((skeleton) => (
+                  <div
+                    key={skeleton}
+                    aria-live="polite"
+                    className="rounded-3xl border border-[#E2E8F0] bg-white p-5 sm:p-6 shadow-[0_8px_24px_-6px_rgba(15,41,66,0.08)]"
+                  >
+                    <div className="flex items-center gap-2 text-xs font-semibold text-[#475569]">
+                      <Loader2 className="h-4 w-4 animate-spin text-[#489BE2]" />
+                      <span>Memuat ulasan Google Maps {activeBranch.cityLabel}...</span>
+                    </div>
+                    <div className="mt-4 h-3.5 w-5/6 rounded bg-[#EFF6FF]" />
+                    <div className="mt-2 h-3.5 w-3/4 rounded bg-[#EFF6FF]" />
+                  </div>
+                ))}
+              </>
+            )}
+
+            {activeData.status === 'success' && activeData.reviews.length > 0 && (
+              <>
+                {activeData.reviews.slice(0, 3).map((review, idx) => (
+                  <article
+                    key={`${activeBranch.id}-${review.authorName}-${idx}`}
+                    className="rounded-3xl border border-[#E2E8F0] bg-white p-5 sm:p-6 shadow-[0_8px_24px_-6px_rgba(15,41,66,0.08)] transition-transform duration-200 hover:-translate-y-0.5"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        {review.authorPhotoUri ? (
+                          <img
+                            src={review.authorPhotoUri}
+                            alt={review.authorName}
+                            referrerPolicy="no-referrer"
+                            className="h-9 w-9 shrink-0 rounded-full object-cover border border-[#E2E8F0]"
+                          />
+                        ) : (
+                          <span
+                            aria-label="Google Review"
+                            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#E2E8F0] bg-white font-heading text-base font-bold shadow-xs"
+                          >
+                            <span className="text-[#4285F4]">G</span>
+                          </span>
+                        )}
+                        <div className="min-w-0">
+                          {review.authorUri ? (
+                            <a
+                              href={review.authorUri}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="block font-heading text-sm sm:text-base font-bold text-[#0F2942] hover:text-[#489BE2] truncate"
+                            >
+                              {review.authorName}
+                            </a>
+                          ) : (
+                            <p className="font-heading text-sm sm:text-base font-bold text-[#0F2942] truncate">
+                              {review.authorName}
+                            </p>
+                          )}
+                          <p className="text-xs text-[#475569] truncate">
+                            Google Maps · Cabang {activeBranch.cityLabel}
+                            {review.relativeTime ? ` · ${review.relativeTime}` : ''}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <div
+                          className="flex items-center gap-0.5 text-[#F59E0B]"
+                          aria-label={`Rating ${review.rating} dari 5`}
+                        >
+                          {Array.from({ length: 5 }).map((_, starIdx) => (
+                            <Star
+                              key={starIdx}
+                              className={`h-4 w-4 ${
+                                starIdx < Math.round(review.rating)
+                                  ? 'fill-[#F59E0B] text-[#F59E0B]'
+                                  : 'text-[#CBD5E1]'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        {review.googleMapsUri && (
+                          <a
+                            href={review.googleMapsUri}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`Lihat ulasan ${review.authorName} di Google Maps`}
+                            className="inline-flex h-7 w-7 items-center justify-center rounded-lg text-[#489BE2] hover:bg-[#EBF5FD] transition-colors"
+                          >
+                            <ExternalLink className="h-3.5 w-3.5" />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+
+                    <p className="mt-3 text-sm leading-relaxed text-[#334155]">
+                      “{review.text}”
+                    </p>
+                  </article>
+                ))}
+
+                <div className="flex items-center justify-between gap-3 px-2 pt-1 text-xs sm:text-sm">
+                  <span className="font-semibold text-[#475569]">
+                    Sumber: Ulasan Google Maps
+                  </span>
+                  <a
+                    href={mapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 font-bold text-[#489BE2] hover:text-[#2D7FC4] transition-colors"
+                  >
+                    <span>Lihat semua ulasan di Google Maps</span>
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                </div>
+              </>
+            )}
+
+            {(activeData.status === 'empty' ||
+              activeData.status === 'error' ||
+              (activeData.status === 'success' && activeData.reviews.length === 0)) && (
+              <>
+                {PARENT_TESTIMONIALS.slice(0, 3).map((review) => (
+                  <article
+                    key={review.id}
+                    className="rounded-3xl border border-[#E2E8F0] bg-white p-5 sm:p-6 shadow-[0_8px_24px_-6px_rgba(15,41,66,0.08)] transition-transform duration-200 hover:-translate-y-0.5"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span
+                          aria-label="Google Review"
+                          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#E2E8F0] bg-white font-heading text-base font-bold shadow-xs"
+                        >
+                          <span className="text-[#4285F4]">G</span>
+                        </span>
+                        <div className="min-w-0">
+                          <p className="font-heading text-sm sm:text-base font-bold text-[#0F2942] truncate">
+                            {review.parentName}
+                          </p>
+                          <p className="text-xs text-[#475569] truncate">
+                            {review.cityAndService}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div
+                        className="flex items-center gap-0.5 text-[#F59E0B] shrink-0"
+                        aria-label={`Rating ${review.rating} dari 5`}
+                      >
+                        {Array.from({ length: 5 }).map((_, starIdx) => (
+                          <Star
+                            key={starIdx}
+                            className="h-4 w-4 fill-[#F59E0B] text-[#F59E0B]"
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    <p className="mt-3 text-sm leading-relaxed text-[#334155]">
+                      “{review.quote}”
+                    </p>
+                  </article>
+                ))}
+              </>
+            )}
           </div>
         </div>
       </div>

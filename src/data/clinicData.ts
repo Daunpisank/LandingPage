@@ -17,19 +17,19 @@ export const ASSETS = {
 
 export const HERO_GALLERY_PHOTOS = [
   {
-    src: '/assets/aistudio/34_4c33e57f.jpg',
-    alt: 'Keluarga dan anak tersenyum ceria bersama di Sunat Nano Circumcision',
-    caption: 'Suasana klinik ceria & ramah keluarga',
+    src: '/assets/aistudio/WhatsApp_Image_2026-07-27_at_09.54.39_bb3845ee.webp',
+    alt: 'Anak tenang bermain game didampingi orang tua di ruang tindakan Sunat Nano Circumcision',
+    caption: 'Suasana klinik ceria & boleh bermain game',
   },
   {
-    src: '/assets/aistudio/25_e5982afa.jpg',
-    alt: 'Anak ceria memegang sertifikat dan hadiah mobil remote di Sunat Nano Circumcision',
-    caption: 'Pulang bawa sertifikat & Mobil Remote gratis',
+    src: '/assets/aistudio/WhatsApp_Image_2026-09-23_at_09.39.36_fbffa574.webp',
+    alt: 'Keluarga dan anak tersenyum memegang sertifikat VIP dan hadiah mobil remote di Sunat Nano Circumcision',
+    caption: 'Pulang bawa sertifikat VIP & Mobil Remote gratis',
   },
   {
-    src: '/assets/aistudio/28_779a9ad9.jpg',
-    alt: 'Momen bahagia orang tua dan bayi setelah layanan sunat di Sunat Nano Circumcision',
-    caption: 'Pendampingan dokter lembut dari bayi hingga remaja',
+    src: '/assets/aistudio/toy_unboxing_square_88cf19f6.webp',
+    alt: 'Anak ceria unboxing hadiah mobil remote RC Sideway Car dari Sunat Nano Circumcision',
+    caption: 'Hadiah langsung Mobil Remote untuk si kecil',
   },
 ];
 
@@ -71,6 +71,8 @@ export interface CoreMethodItem {
   description: string;
   highlight: string;
   iconKey: 'sealer' | 'painless' | 'stitchfree';
+  imageSrc: string;
+  imageAlt: string;
 }
 
 export const CORE_METHODS: CoreMethodItem[] = [
@@ -82,6 +84,8 @@ export const CORE_METHODS: CoreMethodItem[] = [
       'Teknologi penyegel jaringan presisi tinggi yang meminimalkan risiko perdarahan sekaligus memberikan hasil estetis dan simetris tanpa trauma jaringan berlebih.',
     highlight: 'Proses singkat 10–20 menit',
     iconKey: 'sealer',
+    imageSrc: '/assets/aistudio/Glowing_Medical_Kitten_Mascot_ebcfdd57.webp',
+    imageAlt: 'Maskot Dokter Kucing memegang alat Bipolar Teknosealer modern Sunat Nano',
   },
   {
     id: 'minim-nyeri',
@@ -91,6 +95,8 @@ export const CORE_METHODS: CoreMethodItem[] = [
       'Menggunakan teknologi bius tanpa jarum suntik bertekanan lembut yang bersahabat bagi anak. Didukung suasana ceria sehingga si kecil tetap tenang tanpa rasa takut.',
     highlight: 'Anak tetap santai & boleh main',
     iconKey: 'painless',
+    imageSrc: '/assets/aistudio/Cheerful_Gaming_With_a_Cat_Doctor_48c3c864.webp',
+    imageAlt: 'Anak ceria bermain game bersama Dokter Kucing saat sunat minim nyeri di Sunat Nano',
   },
   {
     id: 'tanpa-jahitan',
@@ -100,6 +106,8 @@ export const CORE_METHODS: CoreMethodItem[] = [
       'Tidak memerlukan benang jahit yang harus dicabut ataupun perban tebal yang merepotkan. Luka lebih cepat mengering dan anak bisa beraktivitas ringan lebih awal.',
     highlight: 'Tanpa cabut benang pasca sunat',
     iconKey: 'stitchfree',
+    imageSrc: '/assets/aistudio/Boy_and_Cat_Doctor_Race_a_Toy_Car_145b03db.webp',
+    imageAlt: 'Anak aktif bermain mobil mainan bersama Dokter Kucing setelah sunat tanpa jahitan',
   },
 ];
 
@@ -110,6 +118,8 @@ export interface ServiceCategoryItem {
   description: string;
   topicPrompt: string;
   iconKey: 'baby' | 'child' | 'teen' | 'adult' | 'revision' | 'home';
+  teaserImageSrc?: string;
+  teaserImageAlt?: string;
 }
 
 export const SERVICE_CATEGORIES: ServiceCategoryItem[] = [
@@ -121,6 +131,8 @@ export const SERVICE_CATEGORIES: ServiceCategoryItem[] = [
       'Penanganan super lembut dan higienis oleh dokter berpengalaman. Pemulihan jaringan bayi berlangsung sangat cepat dengan minim rewel.',
     topicPrompt: 'Layanan Sunat Bayi',
     iconKey: 'baby',
+    teaserImageSrc: '/assets/aistudio/Caring_Cat_Doctor_and_Sleeping_Baby_f4e54681.webp',
+    teaserImageAlt: 'Ilustrasi Dokter Kucing merawat bayi yang tidur tenang untuk layanan Sunat Bayi',
   },
   {
     id: 'anak',
@@ -130,6 +142,8 @@ export const SERVICE_CATEGORIES: ServiceCategoryItem[] = [
       'Melayani anak reguler, sunat anak gemuk tanpa diet ketat, hingga anak berkebutuhan khusus (ABK). Termasuk hadiah Mobil Remote gratis.',
     topicPrompt: 'Layanan Sunat Anak (Reguler / Gemuk / ABK)',
     iconKey: 'child',
+    teaserImageSrc: '/assets/aistudio/Boy_and_Cat_Doctor_High-Five_b6aebdc9.webp',
+    teaserImageAlt: 'Ilustrasi anak ceria membawa mobil mainan tos bersama Dokter Kucing untuk Sunat Anak',
   },
   {
     id: 'remaja',
@@ -148,6 +162,8 @@ export const SERVICE_CATEGORIES: ServiceCategoryItem[] = [
       'Ditangani secara profesional di ruang tindakan privat untuk kenyamanan penuh, minim nyeri, dan masa pemulihan yang terukur.',
     topicPrompt: 'Layanan Sunat Dewasa',
     iconKey: 'adult',
+    teaserImageSrc: '/assets/aistudio/Cheerful_Doctor_Cat_Team_6aca939f.webp',
+    teaserImageAlt: 'Ilustrasi pria dewasa dan Dokter Kucing profesional untuk layanan Sunat Dewasa',
   },
   {
     id: 'perbaikan',
@@ -175,6 +191,8 @@ export interface MethodPackage {
   shortTag: string;
   highlight?: string;
   summary: string;
+  imageSrc: string;
+  imageAlt: string;
   features: string[];
   prices: Partial<Record<PatientCategory, string>>;
 }
@@ -187,6 +205,8 @@ export const METHOD_PACKAGES: MethodPackage[] = [
     highlight: 'Pilihan Favorit Orang Tua',
     summary:
       'Teknologi Bipolar Pen Sealer presisi tinggi dengan pemulihan paling cepat, tanpa jahitan, tanpa perban, dan pendampingan penuh.',
+    imageSrc: '/assets/aistudio/WhatsApp_Image_2026-09-23_at_09.39.36_fbffa574.webp',
+    imageAlt: 'Paket Glans Pro Bipolar Pen Sealer VIP Sunat Nano Circumcision',
     features: [
       'Bius tanpa jarum suntik (nyaman untuk anak)',
       'Teknologi Bipolar Pen Sealer minim perdarahan',
@@ -206,6 +226,8 @@ export const METHOD_PACKAGES: MethodPackage[] = [
     shortTag: 'Tanpa Jahitan · Praktis & Rapi',
     summary:
       'Menggunakan alat Bipolar Pen Sealer modern yang menyegel jaringan secara lembut agar anak lebih cepat kembali bermain.',
+    imageSrc: '/assets/aistudio/WhatsApp_Image_2026-09-25_at_10.26.58_c132c1e1.webp',
+    imageAlt: 'Paket Glans Pro Bipolar Pen Sealer REG Sunat Nano Circumcision',
     features: [
       'Bius tanpa jarum suntik yang ramah anak',
       'Proses tindakan singkat 10–20 menit',
@@ -225,6 +247,8 @@ export const METHOD_PACKAGES: MethodPackage[] = [
     shortTag: 'Klamp Ringan · Anak Bebas Aktivitas',
     summary:
       'Metode klamp generasi terbaru dengan pelindung ringan sehingga anak dapat langsung mandi dan memakai celana dengan nyaman.',
+    imageSrc: '/assets/aistudio/toy_unboxing_square_88cf19f6.webp',
+    imageAlt: 'Paket Nano Klamp VIP Sunat Nano Circumcision',
     features: [
       'Bius tanpa jarum suntik bebas rasa cemas',
       'Pelindung klamp ringan, aman saat bergerak',
@@ -243,6 +267,8 @@ export const METHOD_PACKAGES: MethodPackage[] = [
     shortTag: 'Ekonomis · Aman & Higienis',
     summary:
       'Pilihan metode modern yang tetap mengutamakan kenyamanan anak tanpa jahitan dan dengan biaya yang terjangkau.',
+    imageSrc: '/assets/aistudio/WhatsApp_Image_2026-07-27_at_09.54.39_bb3845ee.webp',
+    imageAlt: 'Paket Nano Klamp REG Sunat Nano Circumcision',
     features: [
       'Bius tanpa jarum suntik',
       'Tanpa jahitan konvensional',
@@ -275,7 +301,7 @@ export const PARENT_TESTIMONIALS: ParentTestimonial[] = [
     rating: 5,
     quote:
       'Awalnya anak saya takut banget dengar kata sunat, tapi di Sunat Nano suasananya ceria. Biusnya tanpa jarum suntik jadi tidak menangis, pulangnya senang sekali bawa mobil remote.',
-    photoSrc: '/assets/aistudio/34_4c33e57f.jpg',
+    photoSrc: '/assets/aistudio/WhatsApp_Image_2026-09-23_at_09.39.36_fbffa574.webp',
     photoAlt: 'Keluarga dan anak tersenyum ceria bersama di Sunat Nano Circumcision',
   },
   {
@@ -285,18 +311,18 @@ export const PARENT_TESTIMONIALS: ParentTestimonial[] = [
     rating: 5,
     quote:
       'Dokternya sangat sabar menjelaskan step by step ke orang tua dan anak. Tanpa jahitan benar-benar praktis dirawat di rumah, hari ketiga anak sudah aktif lagi.',
-    photoSrc: '/assets/aistudio/25_e5982afa.jpg',
+    photoSrc: '/assets/aistudio/WhatsApp_Image_2026-09-25_at_10.26.58_c132c1e1.webp',
     photoAlt: 'Anak tersenyum memegang sertifikat dan mobil remote di Sunat Nano',
   },
   {
     id: 'testi-3',
     parentName: 'Bunda Siti Aminah',
-    cityAndService: 'Bangkalan · Sunat Bayi',
+    cityAndService: 'Bangkalan · Sunat Remaja',
     rating: 5,
     quote:
-      'Alhamdulillah sunat bayi di sini sangat tenang, ruangannya bersih, tim medisnya ramah sekali. Konsultasi pasca sunat via WhatsApp juga selalu dijawab cepat oleh dokter.',
-    photoSrc: '/assets/aistudio/28_779a9ad9.jpg',
-    photoAlt: 'Orang tua dan bayi berfoto bersama sertifikat di Sunat Nano',
+      'Alhamdulillah sunat di sini sangat tenang, ruangannya bersih, tim medisnya ramah sekali. Konsultasi pasca sunat via WhatsApp juga selalu dijawab cepat oleh dokter.',
+    photoSrc: '/assets/aistudio/WhatsApp_Image_2026-09-19_at_12.02.10_8ba043b1.webp',
+    photoAlt: 'Keluarga berfoto ceria di klinik Sunat Nano Circumcision',
   },
   {
     id: 'testi-4',
@@ -388,5 +414,65 @@ export const FAQ_ITEMS: FaqItem[] = [
     question: 'Apakah anak benar-benar mendapat hadiah Mobil Remote gratis?',
     answer:
       'Benar! Setiap anak yang selesai menjalani tindakan sunat di Sunat Nano berhak membawa pulang hadiah Mobil Remote gratis serta sertifikat keberanian agar momen sunat menjadi kenangan yang membanggakan.',
+  },
+];
+
+export interface GalleryPhotoItem {
+  id: string;
+  src: string;
+  alt: string;
+  title: string;
+  category: string;
+}
+
+export const GALLERY_PHOTOS: GalleryPhotoItem[] = [
+  {
+    id: 'galeri-1',
+    src: '/assets/aistudio/WhatsApp_Image_2026-07-27_at_09.54.39_bb3845ee.webp',
+    alt: 'Anak tenang bermain game didampingi orang tua di ruang tindakan Sunat Nano Circumcision',
+    title: 'Tenang & Boleh Main Game',
+    category: 'Suasana Tindakan',
+  },
+  {
+    id: 'galeri-2',
+    src: '/assets/aistudio/WhatsApp_Image_2026-09-23_at_09.39.36_fbffa574.webp',
+    alt: 'Keluarga dan anak tersenyum memegang sertifikat VIP dan hadiah mobil remote di Sunat Nano Circumcision',
+    title: 'Bangga Raih Sertifikat VIP & RC Car',
+    category: 'Momen Keluarga',
+  },
+  {
+    id: 'galeri-3',
+    src: '/assets/aistudio/toy_unboxing_square_88cf19f6.webp',
+    alt: 'Anak ceria unboxing hadiah mobil remote RC Sideway Car dari Sunat Nano Circumcision',
+    title: 'Hadiah Langsung Mobil Remote',
+    category: 'Hadiah Anak',
+  },
+  {
+    id: 'galeri-4',
+    src: '/assets/aistudio/WhatsApp_Image_2026-09-25_at_10.26.58_c132c1e1.webp',
+    alt: 'Keluarga berfoto ceria bersama sertifikat sunat di Sunat Nano Circumcision',
+    title: 'Senyum Hangat Keluarga',
+    category: 'Momen Keluarga',
+  },
+  {
+    id: 'galeri-5',
+    src: '/assets/aistudio/WhatsApp_Image_2026-09-10_at_14.21.01_bc85d19d.webp',
+    alt: 'Anak-anak berani berfoto bersama orang tua di Sunat Nano Circumcision',
+    title: 'Para Jagoan Berani Sunat',
+    category: 'Dokumentasi Pasien',
+  },
+  {
+    id: 'galeri-6',
+    src: '/assets/aistudio/WhatsApp_Image_2026-09-19_at_12.02.10_8ba043b1.webp',
+    alt: 'Keluarga berpose santai setelah tindakan sunat di Sunat Nano Circumcision',
+    title: 'Nyaman untuk Anak & Remaja',
+    category: 'Sunat Remaja',
+  },
+  {
+    id: 'galeri-7',
+    src: '/assets/aistudio/WhatsApp_Image_2026-10-01_at_15.00.44_85b1cf7f.webp',
+    alt: 'Keluarga bahagia membawa pulang sertifikat dan mobil remote di Sunat Nano Circumcision',
+    title: 'Pulang Ceria Bawa Mobil Remote',
+    category: 'Hadiah Anak',
   },
 ];
