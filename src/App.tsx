@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { APIProvider } from '@vis.gl/react-google-maps';
 import { motion } from 'motion/react';
 import {
   ArrowRight,
   Award,
   Baby,
+  BookOpen,
   Check,
   CheckCircle2,
+  ChevronDown,
+  Clock,
   ExternalLink,
   Gift,
   HeartHandshake,
@@ -17,6 +20,7 @@ import {
   Menu,
   MessageCircle,
   Phone,
+  Send,
   ShieldCheck,
   Smile,
   Sparkles,
@@ -30,15 +34,18 @@ import {
 } from 'lucide-react';
 import {
   ASSETS,
+  BRANCH_DIRECTORY,
   CLINIC_BRANCHES,
   CORE_METHODS,
   GALLERY_PHOTOS,
   HERO_GALLERY_PHOTOS,
   METHOD_PACKAGES,
+  PARENT_EDUCATION_ARTICLES,
   PATIENT_CATEGORIES,
   SERVICE_CATEGORIES,
   WHATSAPP_CONFIG,
   buildWhatsAppLink,
+  type BranchDirectoryItem,
   type ClinicBranchConfig,
   type PatientCategory,
 } from './data/clinicData';
@@ -84,14 +91,80 @@ const BERANDA_AUTO_GALLERY_PHOTOS = [
   },
 ] as const;
 
-type PageId = 'beranda' | 'metode' | 'layanan' | 'galeri';
+const BERANDA_PRICING_PACKAGES = [
+  {
+    id: 'nano-klemp',
+    title: 'Nano Klemp',
+    price: 'Rp 1.900.000',
+    features: [
+      'Bius tanpa jarum suntik (minim nyeri & ramah anak)',
+      'Pelindung klamp ringan, langsung bisa mandi & beraktivitas',
+      'Tanpa jahitan, minim perdarahan & paket obat perawatan',
+      'Gratis hadiah langsung Mobil Remote pilihan si kecil',
+    ],
+    isBestSeller: false,
+    accentColor: 'text-[#489BE2]',
+    buttonClass:
+      'bg-[#EBF5FD] text-[#0B4F6C] border border-[#BFDBFE] hover:bg-[#489BE2] hover:text-white',
+  },
+  {
+    id: 'glanpro-bipolar-vip',
+    title: 'Glanpro Bipolar pensealer VIP',
+    price: 'Rp 2.700.000',
+    features: [
+      'Bius tanpa jarum suntik bebas rasa cemas untuk anak',
+      'Teknologi Bipolar Pen Sealer presisi dengan pemulihan tercepat',
+      'Tanpa jahitan, tanpa perban & tanpa lepas alat kontrol',
+      'Gratis hadiah langsung Mobil Remote & pendampingan VIP',
+    ],
+    isBestSeller: true,
+    accentColor: 'text-[#D97706]',
+    buttonClass: 'bg-[#489BE2] text-white shadow-md hover:bg-[#3182CE]',
+  },
+] as const;
 
-const NAV_LINKS: Array<{ id: PageId; href: string; emoji: string; label: string }> = [
+type PageId = 'beranda' | 'metode' | 'layanan' | 'galeri' | 'cabang' | 'edukasi' | 'kontak';
+
+interface NavLinkItem {
+  id: PageId;
+  href: string;
+  emoji: string;
+  label: string;
+  description?: string;
+}
+
+const NAV_LINKS: NavLinkItem[] = [
   { id: 'beranda', href: 'index.html', emoji: '🏠', label: 'Beranda' },
   { id: 'metode', href: 'metode.html', emoji: '🩺', label: 'Metode' },
   { id: 'layanan', href: 'layanan.html', emoji: '🧸', label: 'Layanan' },
   { id: 'galeri', href: 'galeri.html', emoji: '📸', label: 'Galeri' },
 ];
+
+const SUBMENU_LINKS: NavLinkItem[] = [
+  {
+    id: 'cabang',
+    href: 'cabang.html',
+    emoji: '📍',
+    label: 'Cabang',
+    description: 'Informasi cabang, kontak & Google Maps',
+  },
+  {
+    id: 'edukasi',
+    href: 'edukasi.html',
+    emoji: '📖',
+    label: 'Edukasi',
+    description: 'Kumpulan draf panduan untuk orang tua',
+  },
+  {
+    id: 'kontak',
+    href: 'kontak.html',
+    emoji: '📞',
+    label: 'Kontak & Reservasi',
+    description: 'Formulir pendaftaran & jadwal WhatsApp',
+  },
+];
+
+const ALL_NAV_LINKS: NavLinkItem[] = [...NAV_LINKS, ...SUBMENU_LINKS];
 
 function detectCurrentPage(): PageId {
   if (typeof document !== 'undefined') {
@@ -100,7 +173,10 @@ function detectCurrentPage(): PageId {
       rootPage === 'beranda' ||
       rootPage === 'metode' ||
       rootPage === 'layanan' ||
-      rootPage === 'galeri'
+      rootPage === 'galeri' ||
+      rootPage === 'cabang' ||
+      rootPage === 'edukasi' ||
+      rootPage === 'kontak'
     ) {
       return rootPage;
     }
@@ -110,6 +186,9 @@ function detectCurrentPage(): PageId {
     if (pathname.endsWith('metode.html') || pathname.endsWith('/metode')) return 'metode';
     if (pathname.endsWith('layanan.html') || pathname.endsWith('/layanan')) return 'layanan';
     if (pathname.endsWith('galeri.html') || pathname.endsWith('/galeri')) return 'galeri';
+    if (pathname.endsWith('cabang.html') || pathname.endsWith('/cabang')) return 'cabang';
+    if (pathname.endsWith('edukasi.html') || pathname.endsWith('/edukasi')) return 'edukasi';
+    if (pathname.endsWith('kontak.html') || pathname.endsWith('/kontak')) return 'kontak';
   }
   return 'beranda';
 }
@@ -128,6 +207,8 @@ export default function App() {
   const [currentPage] = useState<PageId>(() => detectCurrentPage());
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [submenuOpen, setSubmenuOpen] = useState(false);
+  const submenuRef = useRef<HTMLDivElement | null>(null);
   const [waModalOpen, setWaModalOpen] = useState(false);
   const [waContextTopic, setWaContextTopic] = useState<string | null>(null);
   const [pricelistModalOpen, setPricelistModalOpen] = useState(false);
@@ -142,6 +223,16 @@ export default function App() {
   const [mascotError, setMascotError] = useState(false);
   const [activeHeroSlide, setActiveHeroSlide] = useState(0);
   const [activeGallerySlide, setActiveGallerySlide] = useState(0);
+  const [activeLocationTab, setActiveLocationTab] =
+    useState<BranchDirectoryItem['id']>('surabaya');
+  const [resParentName, setResParentName] = useState('');
+  const [resPatientName, setResPatientName] = useState('');
+  const [resPatientAge, setResPatientAge] = useState('');
+  const [resBranch, setResBranch] = useState<BranchDirectoryItem['cityLabel']>('Surabaya');
+  const [resService, setResService] = useState('Glanpro Bipolar pensealer VIP (Rp 2.700.000)');
+  const [resMessage, setResMessage] = useState('');
+  const [resFormError, setResFormError] = useState<string | null>(null);
+  const [resSubmittedUrl, setResSubmittedUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const heroInterval = window.setInterval(() => {
@@ -173,6 +264,28 @@ export default function App() {
     return () => window.removeEventListener('gmp-quota-exceeded', onQuotaExceeded);
   }, []);
 
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (submenuRef.current && !submenuRef.current.contains(event.target as Node)) {
+        setSubmenuOpen(false);
+      }
+    };
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setSubmenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, []);
+
+  const activeSubmenuItem = SUBMENU_LINKS.find((item) => item.id === currentPage);
+  const isSubmenuActive = Boolean(activeSubmenuItem);
+
   const openConsultation = (topic?: string) => {
     setWaContextTopic(topic ?? null);
     setWaModalOpen(true);
@@ -192,6 +305,44 @@ export default function App() {
       [packageId]: !prev[packageId],
     }));
   };
+
+  const handleReservationSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const parentName = resParentName.trim();
+    const patientAge = resPatientAge.trim();
+
+    if (!parentName || !patientAge) {
+      setResFormError('Mohon lengkapi Nama orang tua dan Usia pasien terlebih dahulu.');
+      setResSubmittedUrl(null);
+      return;
+    }
+
+    setResFormError(null);
+    const lines = [
+      'Halo Admin Sunat Nano, saya ingin reservasi/konsultasi jadwal sunat:',
+      `- Nama Orang Tua: ${parentName}`,
+      resPatientName.trim() ? `- Nama Pasien: ${resPatientName.trim()}` : null,
+      `- Usia Pasien: ${patientAge}`,
+      `- Pilihan Cabang: ${resBranch}`,
+      `- Pilihan Layanan: ${resService}`,
+      resMessage.trim() ? `- Pesan/Pertanyaan: ${resMessage.trim()}` : null,
+    ].filter(Boolean);
+
+    const waUrl = buildWhatsAppLink(lines.join('\n'));
+    setResSubmittedUrl(waUrl);
+
+    const link = document.createElement('a');
+    link.href = waUrl;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const activeLocationBranch =
+    BRANCH_DIRECTORY.find((branch) => branch.id === activeLocationTab) ?? BRANCH_DIRECTORY[0];
+  const activeLocationLive = branchesData[activeLocationTab];
 
   const activePackages = METHOD_PACKAGES.filter((pkg) => Boolean(pkg.prices[selectedCategory]));
   const activeCategoryMeta = PATIENT_CATEGORIES.find((cat) => cat.id === selectedCategory);
@@ -283,10 +434,10 @@ export default function App() {
             </span>
           </a>
 
-          {/* Zone 2: Pill Nav Links dengan Ikon/Emoji */}
+          {/* Zone 2: Pill Nav Links dengan Ikon/Emoji + Submenu */}
           <nav
             aria-label="Navigasi Utama"
-            className="hidden lg:flex items-center gap-2 text-[15px]"
+            className="hidden lg:flex items-center gap-1.5 text-[14.5px]"
           >
             {NAV_LINKS.map((item) => {
               const isActive = currentPage === item.id;
@@ -305,6 +456,70 @@ export default function App() {
                 </a>
               );
             })}
+
+            {/* Submenu Dropdown: Cabang, Edukasi, Kontak & Reservasi */}
+            <div
+              ref={submenuRef}
+              className="nav-submenu-wrapper shrink-0"
+              onMouseEnter={() => setSubmenuOpen(true)}
+              onMouseLeave={() => setSubmenuOpen(false)}
+            >
+              <button
+                type="button"
+                aria-haspopup="true"
+                aria-expanded={submenuOpen}
+                data-active={isSubmenuActive ? 'true' : undefined}
+                onClick={() => setSubmenuOpen((prev) => !prev)}
+                className="nav-pill-link shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#489BE2]"
+              >
+                <span className="nav-pill-icon" aria-hidden="true">
+                  {activeSubmenuItem ? activeSubmenuItem.emoji : '🗂️'}
+                </span>
+                <span>{activeSubmenuItem ? activeSubmenuItem.label : 'Submenu'}</span>
+                <ChevronDown
+                  className={`h-4 w-4 transition-transform duration-200 ${
+                    submenuOpen ? 'rotate-180' : ''
+                  }`}
+                  aria-hidden="true"
+                />
+              </button>
+
+              {submenuOpen && (
+                <div className="nav-submenu-panel" role="menu" aria-label="Submenu Informasi Klinik">
+                  {SUBMENU_LINKS.map((sub) => {
+                    const isSubActive = currentPage === sub.id;
+                    return (
+                      <a
+                        key={sub.href}
+                        href={sub.href}
+                        role="menuitem"
+                        aria-current={isSubActive ? 'page' : undefined}
+                        data-active={isSubActive ? 'true' : undefined}
+                        onClick={() => setSubmenuOpen(false)}
+                        className="nav-submenu-item"
+                      >
+                        <span
+                          className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-base"
+                          aria-hidden="true"
+                        >
+                          {sub.emoji}
+                        </span>
+                        <span className="flex flex-col text-left">
+                          <span className="font-heading text-sm font-bold leading-snug text-[#0F2942]">
+                            {sub.label}
+                          </span>
+                          {sub.description && (
+                            <span className="mt-0.5 text-xs leading-snug text-[#475569]">
+                              {sub.description}
+                            </span>
+                          )}
+                        </span>
+                      </a>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </nav>
 
           {/* Zone 3: Single Primary Action + Mobile Menu Trigger */}
@@ -352,6 +567,33 @@ export default function App() {
                   </a>
                 );
               })}
+
+              <div className="my-1 border-t border-[#E2E8F0] pt-2">
+                <p className="px-4 pb-1.5 text-xs font-extrabold uppercase tracking-wider text-[#64748B]">
+                  Submenu Informasi
+                </p>
+                <div className="flex flex-col gap-1.5">
+                  {SUBMENU_LINKS.map((sub) => {
+                    const isActive = currentPage === sub.id;
+                    return (
+                      <a
+                        key={sub.href}
+                        href={sub.href}
+                        aria-current={isActive ? 'page' : undefined}
+                        data-active={isActive ? 'true' : undefined}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="nav-pill-link nav-pill-mobile text-base"
+                      >
+                        <span className="nav-pill-icon" aria-hidden="true">
+                          {sub.emoji}
+                        </span>
+                        <span>{sub.label}</span>
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+
               <button
                 type="button"
                 onClick={() => openConsultation()}
@@ -392,13 +634,13 @@ export default function App() {
                       />
                     </div>
 
-                    <h1 className="typo-h1 mt-4">
+                    <h1 className="typo-h1 fade-in-up fade-delay-1 mt-4">
                       Sunat Modern,{' '}
                       <span className="hero-marker-highlight">Anak Senang</span>,{' '}
                       <span className="text-[#EA580C]">Orang Tua Tenang.</span>
                     </h1>
 
-                    <p className="typo-subheadline mt-5">
+                    <p className="typo-subheadline fade-in-up fade-delay-2 mt-5">
                       Layanan sunat ramah anak dengan{' '}
                       <strong className="font-bold text-[#0B4F6C]">bius tanpa jarum suntik</strong>,
                       metode presisi{' '}
@@ -408,12 +650,12 @@ export default function App() {
                       tanpa jahitan, dan ditangani dokter berpengalaman.
                     </p>
 
-                    <p className="mt-3 max-w-xl text-base leading-relaxed text-[#EA580C] font-semibold">
+                    <p className="fade-in-up fade-delay-2 mt-3 max-w-xl text-base leading-relaxed text-[#EA580C] font-semibold">
                       Anak boleh membawa mainan favorit, tetap ceria selama tindakan, dan pulang
                       membawa hadiah Mobil Remote gratis.
                     </p>
 
-                    <div className="hero-cta-group mt-8 flex flex-wrap items-center gap-4">
+                    <div className="hero-cta-group fade-in-up fade-delay-3 mt-8 flex flex-wrap items-center gap-4">
                       <button
                         type="button"
                         onClick={() => openConsultation()}
@@ -548,14 +790,6 @@ export default function App() {
               </div>
             </section>
 
-            {/* SECTION INTEGRASI GOOGLE (Lokasi Peta & Ulasan Google Maps) */}
-            <BerandaMapAndReviewsSection
-              hasApiKey={hasMapsApiKey && !quotaExceeded}
-              branchesData={branchesData}
-              selectedBranchId={selectedBranchId}
-              onSelectBranch={setSelectedBranchId}
-            />
-
             {/* SECTION GALERI FOTO BERJALAN (Auto-Slider Crossfade + Ken Burns) */}
             <section
               aria-label="Galeri Foto Berjalan Sunat Nano"
@@ -591,70 +825,71 @@ export default function App() {
               </div>
             </section>
 
-            {/* SECTION 1 (TEASER): METODE SUNAT MODERN KAMI */}
+            {/* SECTION PAKET HARGA: PILIHAN PAKET KHITAN NYAMAN */}
             <section
-              id="cuplikan-metode"
+              id="pilihan-paket"
               className="border-t border-[#DCE8F5] bg-[#EBF5FD]/40 py-16 sm:py-24"
             >
               <div className="mx-auto max-w-6xl px-4 sm:px-6">
                 <div className="mx-auto max-w-2xl text-center">
-                  <p className="text-base font-bold text-[#489BE2]">Teknologi Sunat Modern</p>
+                  <p className="text-base font-bold text-[#489BE2]">Paket Transparan &amp; Terjangkau</p>
                   <h2 className="typo-h2 mt-2">
-                    Metode Sunat <span className="typo-accent-word">Modern Kami</span>
+                    Pilihan Paket <span className="typo-accent-word">Khitan Nyaman</span>
                   </h2>
                   <p className="typo-subheadline mx-auto mt-3">
-                    Tiga keunggulan utama metode Sunat Nano agar si kecil tetap nyaman, minim nyeri,
-                    dan cepat kembali beraktivitas.
+                    Pilih paket layanan sesuai kebutuhan si kecil dengan penanganan ramah anak dan
+                    fasilitas lengkap.
                   </p>
                 </div>
 
-                <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
-                  {CORE_METHODS.map((method, idx) => {
-                    const topAccent =
-                      idx === 0
-                        ? 'border-t-4 border-t-[#489BE2]'
-                        : idx === 1
-                        ? 'border-t-4 border-t-[#F2B029]'
-                        : 'border-t-4 border-t-[#F97316]';
-                    const iconFrame =
-                      idx === 0
-                        ? 'border-[#BFDBFE] bg-white'
-                        : idx === 1
-                        ? 'border-[#FDE68A] bg-white'
-                        : 'border-[#FDBA74] bg-white';
+                <div className="pricing-beranda-grid mt-12">
+                  {BERANDA_PRICING_PACKAGES.map((pkg) => (
+                    <article
+                      key={pkg.id}
+                      className={`pricing-beranda-card ${
+                        pkg.isBestSeller ? 'pricing-beranda-card--vip' : ''
+                      }`}
+                    >
+                      {pkg.isBestSeller && (
+                        <span className="badge-best-seller">BEST SELLER</span>
+                      )}
 
-                    return (
-                      <article
-                        key={method.id}
-                        className={`flex flex-col items-center rounded-3xl border border-[#E2E8F0] ${topAccent} bg-white p-6 text-center shadow-[var(--shadow-card)] transition-transform duration-200 hover:-translate-y-0.5`}
-                      >
-                        <div
-                          className={`w-full overflow-hidden rounded-2xl border ${iconFrame} aspect-square p-2`}
-                        >
-                          {/* GANTI GAMBAR METODE */}
-                          <img
-                            src={method.imageSrc}
-                            alt={method.imageAlt}
-                            referrerPolicy="no-referrer"
-                            className="h-full w-full object-contain"
-                          />
-                        </div>
-                        <h3 className="typo-card-title mt-5 text-xl sm:text-2xl">
-                          {method.title}
+                      <div>
+                        <p className={`text-sm font-bold uppercase tracking-wide ${pkg.accentColor}`}>
+                          Sunat Nano
+                        </p>
+                        <h3 className="typo-card-title mt-1.5 text-2xl text-[#0F2942]">
+                          {pkg.title}
                         </h3>
-                      </article>
-                    );
-                  })}
-                </div>
+                        <p className="pricing-beranda-price mt-3">
+                          {pkg.price}
+                        </p>
 
-                <div className="mt-10 text-center">
-                  <a
-                    href="metode.html"
-                    className="typo-cta inline-flex min-h-[50px] items-center justify-center gap-2.5 rounded-2xl bg-[#489BE2] px-8 py-3.5 text-base text-white shadow-md hover:bg-[#3182CE] transition-colors whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#489BE2]"
-                  >
-                    <span>Lihat Detail Semua Metode</span>
-                    <ArrowRight className="h-5 w-5" />
-                  </a>
+                        <ul className="mt-6 space-y-3 border-t border-[#E2E8F0] pt-5 text-left">
+                          {pkg.features.map((feat) => (
+                            <li
+                              key={feat}
+                              className="flex items-start gap-2.5 text-base font-semibold text-[#334155]"
+                            >
+                              <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#F2B029]" />
+                              <span>{feat}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="mt-8">
+                        <button
+                          type="button"
+                          onClick={() => openConsultation(`${pkg.title} (${pkg.price})`)}
+                          className={`typo-cta inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-2xl px-6 py-3.5 text-base transition-colors ${pkg.buttonClass}`}
+                        >
+                          <MessageCircle className="h-5 w-5" />
+                          <span>Pilih Paket</span>
+                        </button>
+                      </div>
+                    </article>
+                  ))}
                 </div>
               </div>
             </section>
@@ -735,6 +970,622 @@ export default function App() {
               </div>
             </section>
           </>
+        )}
+
+        {/* SUBMENU 1: CABANG & INTEGRASI GOOGLE MAPS (cabang.html) */}
+        {currentPage === 'cabang' && (
+          <>
+            <section className="relative overflow-hidden bg-transparent pt-28 pb-10 sm:pt-32 sm:pb-12">
+              <div
+                aria-hidden="true"
+                className="mobile-bg-decor pointer-events-none absolute -top-24 right-0 h-[380px] w-[380px] rounded-full bg-[#489BE2]/15 blur-3xl"
+              />
+              <div
+                aria-hidden="true"
+                className="mobile-bg-decor pointer-events-none absolute bottom-0 -left-24 h-[340px] w-[340px] rounded-full bg-[#F2B029]/15 blur-3xl"
+              />
+
+              <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
+                <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+                  <div className="max-w-2xl">
+                    <p className="inline-flex items-center gap-2 text-base font-bold text-[#16A34A]">
+                      <MapPin className="h-4 w-4" />
+                      <span>Jaringan Klinik Resmi Jawa Timur</span>
+                    </p>
+                    <h1 className="typo-h1 mt-2">
+                      Cabang &amp; <span className="typo-accent-word">Lokasi Klinik</span>
+                    </h1>
+                    <p className="typo-subheadline mt-4">
+                      Informasi lengkap alamat, nomor kontak WhatsApp, jam operasional, ulasan
+                      pasien, serta integrasi peta Google Maps untuk cabang Surabaya, Sidoarjo, dan
+                      Bangkalan.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => openConsultation('Tanya Lokasi & Jadwal Cabang Sunat Nano')}
+                    className="typo-cta inline-flex min-h-[46px] items-center justify-center gap-2 rounded-2xl bg-[#489BE2] px-6 py-3 text-sm sm:text-base text-white shadow-sm hover:bg-[#3182CE] transition-colors whitespace-nowrap shrink-0 self-start lg:self-auto"
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    <span>Konsultasi Gratis</span>
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            {/* KARTU CABANG TERDEKAT (3 KOLOM) */}
+            <section
+              id="cabang-terdekat"
+              className="border-t border-[#E2E8F0] bg-[#F8FAFC] py-14 sm:py-20"
+            >
+              <div className="mx-auto max-w-6xl px-4 sm:px-6">
+                <div className="mx-auto max-w-2xl text-center">
+                  <p className="text-base font-bold text-[#16A34A]">
+                    Alamat &amp; Kontak Resmi Cabang
+                  </p>
+                  <h2 className="typo-h2 mt-2">
+                    Temukan <span className="typo-accent-word">Cabang Terdekat</span>
+                  </h2>
+                  <p className="typo-subheadline mx-auto mt-3">
+                    Kunjungi cabang resmi Sunat Nano Circumcision di Surabaya, Sidoarjo, atau
+                    Bangkalan dengan fasilitas ruang tindakan ramah anak.
+                  </p>
+                </div>
+
+                <div className="branches-grid mt-10">
+                  {BRANCH_DIRECTORY.map((branch) => {
+                    const liveData = branchesData[branch.id];
+                    const ratingValue = liveData?.rating ?? branch.fallbackRating;
+                    const reviewCount = liveData?.userRatingCount ?? branch.fallbackReviewCount;
+                    const addressText = liveData?.formattedAddress || branch.fallbackAddress;
+                    const mapsUrl = liveData?.googleMapsUri || branch.mapsSearchUrl;
+
+                    return (
+                      <article key={branch.id} className="branch-card">
+                        <div>
+                          <div className="aspect-[4/3] w-full overflow-hidden bg-[#E2E8F0]">
+                            <img
+                              src={branch.imageSrc}
+                              alt={branch.imageAlt}
+                              referrerPolicy="no-referrer"
+                              className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                            />
+                          </div>
+
+                          <div className="p-6 pb-4">
+                            <h3 className="font-heading text-xl font-bold text-[#0F2942]">
+                              {branch.clinicName}
+                            </h3>
+
+                            <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
+                              <span className="inline-flex items-center gap-1 font-bold text-[#D97706] tabular-nums">
+                                <Star className="h-4 w-4 fill-[#F59E0B] text-[#F59E0B]" />
+                                {ratingValue.toFixed(1)}
+                              </span>
+                              <span className="text-[#475569] tabular-nums">
+                                ({reviewCount}+ ulasan Google)
+                              </span>
+                            </div>
+
+                            <ul className="mt-4 space-y-2.5 text-sm text-[#334155]">
+                              <li className="flex items-start gap-2.5">
+                                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#489BE2]" />
+                                <span>{addressText}</span>
+                              </li>
+                              <li className="flex items-center gap-2.5">
+                                <Phone className="h-4 w-4 shrink-0 text-[#16A34A]" />
+                                <span className="font-semibold tabular-nums">
+                                  {branch.whatsappDisplay}
+                                </span>
+                              </li>
+                              <li className="flex items-center gap-2.5">
+                                <Clock className="h-4 w-4 shrink-0 text-[#F2B029]" />
+                                <span>{branch.operatingHours}</span>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+
+                        <div className="px-6 pb-6 pt-2">
+                          <div className="branch-card-actions border-t border-[#E2E8F0] pt-4">
+                            <a
+                              href={mapsUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl border border-[#0F2942] bg-white px-4 py-2.5 text-sm font-bold text-[#0F2942] hover:bg-[#F8FAFC] transition-colors whitespace-nowrap"
+                            >
+                              <MapPin className="h-4 w-4" />
+                              <span>Google Maps</span>
+                            </a>
+
+                            <button
+                              type="button"
+                              onClick={() =>
+                                openConsultation(`Konsultasi Cabang ${branch.cityLabel}`)
+                              }
+                              className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl bg-[#22C55E] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#16A34A] transition-colors whitespace-nowrap"
+                            >
+                              <MessageCircle className="h-4 w-4" />
+                              <span>Konsultasi</span>
+                            </button>
+                          </div>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </div>
+            </section>
+
+            {/* PETA INTERAKTIF LOKASI CABANG (TAB SURABAYA, SIDOARJO, BANGKALAN) */}
+            <section
+              id="lokasi-peta"
+              className="border-t border-[#E2E8F0] bg-white py-14 sm:py-20"
+            >
+              <div className="mx-auto max-w-6xl px-4 sm:px-6">
+                <div className="mx-auto max-w-2xl text-center">
+                  <p className="text-base font-bold text-[#489BE2]">Peta Lokasi Resmi</p>
+                  <h2 className="typo-h2 mt-2">
+                    Integrasi <span className="typo-accent-word">Google Maps</span>
+                  </h2>
+                  <p className="typo-subheadline mx-auto mt-3">
+                    Pilih kota cabang di bawah untuk melihat peta arah menuju klinik beserta
+                    informasi kontak lengkap.
+                  </p>
+                </div>
+
+                {/* Tab Interaktif: Surabaya, Sidoarjo, Bangkalan */}
+                <div className="mt-8 flex justify-center">
+                  <div
+                    role="tablist"
+                    aria-label="Pilih Lokasi Cabang Peta"
+                    className="location-tabs-bar"
+                  >
+                    {BRANCH_DIRECTORY.map((branch) => {
+                      const isActive = activeLocationTab === branch.id;
+                      return (
+                        <button
+                          key={branch.id}
+                          type="button"
+                          role="tab"
+                          aria-selected={isActive}
+                          data-active={isActive ? 'true' : undefined}
+                          onClick={() => {
+                            setActiveLocationTab(branch.id);
+                            setSelectedBranchId(branch.id);
+                          }}
+                          className="location-tab-btn"
+                        >
+                          <MapPin className="h-4 w-4 shrink-0" />
+                          <span>{branch.cityLabel}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Panel Peta & Detail Informasi Cabang (Transisi Fade) */}
+                <div
+                  key={activeLocationBranch.id}
+                  className="location-panel-fade mt-8 overflow-hidden rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] p-4 sm:p-6 shadow-[var(--shadow-card)]"
+                >
+                  <div className="overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white h-[320px] sm:h-[400px]">
+                    <iframe
+                      title={`Peta ${activeLocationBranch.clinicName}`}
+                      src={`https://maps.google.com/maps?q=${encodeURIComponent(
+                        activeLocationBranch.mapsQuery
+                      )}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
+                      className="h-full w-full border-0"
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      allowFullScreen
+                    />
+                  </div>
+
+                  <div className="mt-5 flex flex-col gap-5 rounded-2xl border border-[#E2E8F0] bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="space-y-2 text-left">
+                      <div className="flex flex-wrap items-center gap-3">
+                        <h3 className="font-heading text-xl font-bold text-[#0F2942]">
+                          {activeLocationLive?.displayName || activeLocationBranch.clinicName}
+                        </h3>
+                        <span className="inline-flex items-center gap-1 rounded-full bg-[#FFFBEB] border border-[#FDE68A] px-3 py-0.5 text-xs font-bold text-[#B45309] tabular-nums">
+                          <Star className="h-3.5 w-3.5 fill-[#F59E0B] text-[#F59E0B]" />
+                          {(
+                            activeLocationLive?.rating ?? activeLocationBranch.fallbackRating
+                          ).toFixed(1)}{' '}
+                          (
+                          {activeLocationLive?.userRatingCount ??
+                            activeLocationBranch.fallbackReviewCount}
+                          + ulasan)
+                        </span>
+                      </div>
+
+                      <p className="text-sm text-[#334155]">
+                        {activeLocationLive?.formattedAddress ||
+                          activeLocationBranch.fallbackAddress}
+                      </p>
+
+                      <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-1 text-sm font-semibold text-[#475569]">
+                        <span className="inline-flex items-center gap-1.5">
+                          <Phone className="h-4 w-4 text-[#16A34A]" />
+                          <span className="tabular-nums">
+                            {activeLocationBranch.whatsappDisplay}
+                          </span>
+                        </span>
+                        <span className="inline-flex items-center gap-1.5">
+                          <Clock className="h-4 w-4 text-[#489BE2]" />
+                          <span>{activeLocationBranch.operatingHours}</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-3 shrink-0">
+                      <a
+                        href={
+                          activeLocationLive?.googleMapsUri || activeLocationBranch.mapsSearchUrl
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl border border-[#0F2942] bg-white px-4 py-2.5 text-sm font-bold text-[#0F2942] hover:bg-[#F8FAFC] transition-colors whitespace-nowrap"
+                      >
+                        <span>Buka Maps</span>
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          openConsultation(`Konsultasi Cabang ${activeLocationBranch.cityLabel}`)
+                        }
+                        className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[#22C55E] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#16A34A] transition-colors whitespace-nowrap"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                        <span>Chat WhatsApp</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* INTEGRASI LIVE GOOGLE MAPS & ULASAN GOOGLE */}
+            <BerandaMapAndReviewsSection
+              hasApiKey={hasMapsApiKey && !quotaExceeded}
+              branchesData={branchesData}
+              selectedBranchId={selectedBranchId}
+              onSelectBranch={setSelectedBranchId}
+            />
+          </>
+        )}
+
+        {/* SUBMENU 2: EDUKASI ORANG TUA (edukasi.html) */}
+        {currentPage === 'edukasi' && (
+          <section
+            id="edukasi-orang-tua"
+            className="relative overflow-hidden bg-transparent pt-28 pb-16 sm:pt-32 sm:pb-24"
+          >
+            <div
+              aria-hidden="true"
+              className="mobile-bg-decor pointer-events-none absolute -top-24 right-0 h-[380px] w-[380px] rounded-full bg-[#489BE2]/15 blur-3xl"
+            />
+            <div
+              aria-hidden="true"
+              className="mobile-bg-decor pointer-events-none absolute bottom-0 -left-24 h-[340px] w-[340px] rounded-full bg-[#F2B029]/15 blur-3xl"
+            />
+
+            <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
+              <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+                <div className="max-w-2xl">
+                  <p className="inline-flex items-center gap-2 text-base font-bold text-[#0B4F6C]">
+                    <BookOpen className="h-4 w-4 text-[#489BE2]" />
+                    <span>Panduan Medis &amp; Persiapan Anak</span>
+                  </p>
+                  <h1 className="typo-h1 mt-2">
+                    Edukasi untuk <span className="typo-accent-word">Orang Tua</span>
+                  </h1>
+                  <p className="typo-subheadline mt-4">
+                    Kumpulan draf informasi penting seputar metode sunat modern, persiapan mental
+                    anak, hingga perawatan nyaman di rumah.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => openConsultation('Tanya Edukasi & Persiapan Sunat Anak')}
+                  className="typo-cta inline-flex min-h-[46px] items-center justify-center gap-2 rounded-2xl bg-[#489BE2] px-6 py-3 text-sm sm:text-base text-white shadow-sm hover:bg-[#3182CE] transition-colors whitespace-nowrap shrink-0 self-start lg:self-auto"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  <span>Konsultasi Gratis</span>
+                </button>
+              </div>
+
+              <div className="education-grid mt-10">
+                {PARENT_EDUCATION_ARTICLES.map((article) => (
+                  <article key={article.id} className="education-card">
+                    <div>
+                      <span className="badge-draf">{article.badge}</span>
+                      <h2 className="mt-3 font-heading text-lg sm:text-xl font-bold leading-snug text-[#0F2942]">
+                        {article.title}
+                      </h2>
+                      <p className="mt-2.5 text-sm leading-relaxed text-[#475569]">
+                        {article.description}
+                      </p>
+                    </div>
+
+                    <div className="mt-6 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => openConsultation(article.topicPrompt)}
+                        className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl border border-[#CBD5E1] bg-[#F8FAFC] px-4 py-2.5 text-sm font-bold text-[#0F2942] hover:border-[#0F2942] hover:bg-[#0F2942] hover:text-white transition-colors"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                        <span>Tanya admin</span>
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* SUBMENU 3: KONTAK & RESERVASI (kontak.html) */}
+        {currentPage === 'kontak' && (
+          <section
+            id="kontak-reservasi"
+            className="relative overflow-hidden bg-transparent pt-28 pb-16 sm:pt-32 sm:pb-24"
+          >
+            <div
+              aria-hidden="true"
+              className="mobile-bg-decor pointer-events-none absolute -top-24 right-0 h-[380px] w-[380px] rounded-full bg-[#489BE2]/15 blur-3xl"
+            />
+            <div
+              aria-hidden="true"
+              className="mobile-bg-decor pointer-events-none absolute bottom-0 -left-24 h-[340px] w-[340px] rounded-full bg-[#F2B029]/15 blur-3xl"
+            />
+
+            <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
+              <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+                <div className="max-w-2xl">
+                  <p className="inline-flex items-center gap-2 text-base font-bold text-[#16A34A]">
+                    <Phone className="h-4 w-4" />
+                    <span>Pendaftaran Cepat &amp; Mudah</span>
+                  </p>
+                  <h1 className="typo-h1 mt-2">
+                    Kontak &amp; <span className="typo-accent-word">Reservasi</span>
+                  </h1>
+                  <p className="typo-subheadline mt-4">
+                    Isi formulir konsultasi atau pemesanan jadwal di bawah, pesan akan langsung
+                    terhubung ke WhatsApp admin klinik kami.
+                  </p>
+                </div>
+
+                <a
+                  href={buildWhatsAppLink()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="typo-cta inline-flex min-h-[46px] items-center justify-center gap-2 rounded-2xl bg-[#22C55E] px-6 py-3 text-sm sm:text-base text-white shadow-sm hover:bg-[#16A34A] transition-colors whitespace-nowrap shrink-0 self-start lg:self-auto"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  <span>Chat WhatsApp Admin</span>
+                </a>
+              </div>
+
+              <div className="reservation-grid mt-10">
+                {/* Kolom Kiri: Form Reservasi WhatsApp */}
+                <div className="reservation-form-card rounded-3xl border border-[#E2E8F0] bg-white p-6 sm:p-8 shadow-[var(--shadow-card)]">
+                  <form onSubmit={handleReservationSubmit} noValidate className="space-y-4">
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div>
+                        <label
+                          htmlFor="res-parent-name"
+                          className="mb-1.5 block text-sm font-bold text-[#0F2942]"
+                        >
+                          Nama orang tua
+                        </label>
+                        <input
+                          id="res-parent-name"
+                          type="text"
+                          required
+                          value={resParentName}
+                          onChange={(e) => setResParentName(e.target.value)}
+                          placeholder="Contoh: Ayah Dimas / Bunda Rina"
+                          className="reservation-input"
+                        />
+                      </div>
+
+                      <div>
+                        <label
+                          htmlFor="res-patient-name"
+                          className="mb-1.5 block text-sm font-bold text-[#0F2942]"
+                        >
+                          Nama pasien <span className="font-normal text-[#64748B]">(opsional)</span>
+                        </label>
+                        <input
+                          id="res-patient-name"
+                          type="text"
+                          value={resPatientName}
+                          onChange={(e) => setResPatientName(e.target.value)}
+                          placeholder="Nama panggilan anak"
+                          className="reservation-input"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid gap-4 sm:grid-cols-3">
+                      <div>
+                        <label
+                          htmlFor="res-patient-age"
+                          className="mb-1.5 block text-sm font-bold text-[#0F2942]"
+                        >
+                          Usia pasien
+                        </label>
+                        <input
+                          id="res-patient-age"
+                          type="text"
+                          required
+                          value={resPatientAge}
+                          onChange={(e) => setResPatientAge(e.target.value)}
+                          placeholder="Contoh: 7 tahun"
+                          className="reservation-input"
+                        />
+                      </div>
+
+                      <div>
+                        <label
+                          htmlFor="res-branch"
+                          className="mb-1.5 block text-sm font-bold text-[#0F2942]"
+                        >
+                          Cabang
+                        </label>
+                        <select
+                          id="res-branch"
+                          value={resBranch}
+                          onChange={(e) =>
+                            setResBranch(e.target.value as BranchDirectoryItem['cityLabel'])
+                          }
+                          className="reservation-input"
+                        >
+                          <option value="Surabaya">Surabaya</option>
+                          <option value="Sidoarjo">Sidoarjo</option>
+                          <option value="Bangkalan">Bangkalan</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label
+                          htmlFor="res-service"
+                          className="mb-1.5 block text-sm font-bold text-[#0F2942]"
+                        >
+                          Layanan
+                        </label>
+                        <select
+                          id="res-service"
+                          value={resService}
+                          onChange={(e) => setResService(e.target.value)}
+                          className="reservation-input"
+                        >
+                          <option value="Nano Klemp (Rp 1.900.000)">
+                            Nano Klemp (Rp 1.900.000)
+                          </option>
+                          <option value="Glanpro Bipolar pensealer VIP (Rp 2.700.000)">
+                            Glanpro Bipolar pensealer VIP (Rp 2.700.000)
+                          </option>
+                          <option value="Sunat Bayi">Sunat Bayi</option>
+                          <option value="Sunat Anak (Reguler / Gemuk / ABK)">
+                            Sunat Anak (Reguler / Gemuk / ABK)
+                          </option>
+                          <option value="Sunat Remaja & Dewasa">Sunat Remaja &amp; Dewasa</option>
+                          <option value="Layanan Home Visit">Layanan Home Visit</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="res-message"
+                        className="mb-1.5 block text-sm font-bold text-[#0F2942]"
+                      >
+                        Pesan / pertanyaan
+                      </label>
+                      <textarea
+                        id="res-message"
+                        rows={4}
+                        value={resMessage}
+                        onChange={(e) => setResMessage(e.target.value)}
+                        placeholder="Tulis rencana jadwal atau pertanyaan seputar kondisi anak..."
+                        className="reservation-input resize-y"
+                      />
+                    </div>
+
+                    {resFormError && (
+                      <p
+                        role="alert"
+                        className="rounded-xl border border-[#FCA5A5] bg-[#FEF2F2] px-4 py-2.5 text-sm font-semibold text-[#B91C1C]"
+                      >
+                        {resFormError}
+                      </p>
+                    )}
+
+                    <button type="submit" className="btn-wa-submit">
+                      <Send className="h-5 w-5" />
+                      <span>Kirim ke WhatsApp</span>
+                    </button>
+
+                    {resSubmittedUrl && (
+                      <div className="rounded-2xl border border-[#86EFAC] bg-[#F0FDF4] p-4 text-sm text-[#166534]">
+                        <p className="font-bold">
+                          Pesan reservasi siap dikirim ke WhatsApp Admin!
+                        </p>
+                        <a
+                          href={resSubmittedUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-2 inline-flex items-center gap-1.5 font-bold text-[#15803D] underline hover:text-[#14532D]"
+                        >
+                          <span>Klik di sini jika WhatsApp belum terbuka otomatis</span>
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
+                      </div>
+                    )}
+                  </form>
+                </div>
+
+                {/* Kolom Kanan: Gambar Gedung Klinik + Info Singkat */}
+                <div className="overflow-hidden rounded-3xl border border-[#E2E8F0] bg-[#F8FAFC] shadow-[var(--shadow-card)]">
+                  <div className="aspect-[4/3] w-full overflow-hidden bg-[#E2E8F0]">
+                    <img
+                      src={ASSETS.clinicMainExterior}
+                      alt="Gedung Klinik Utama Sunat Nano Circumcision"
+                      referrerPolicy="no-referrer"
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+
+                  <div className="p-6 text-left">
+                    <h2 className="font-heading text-xl font-bold text-[#0F2942]">
+                      Sunat Nano Circumcision
+                    </h2>
+
+                    <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
+                      <span className="inline-flex items-center gap-1 font-bold text-[#D97706] tabular-nums">
+                        <Star className="h-4 w-4 fill-[#F59E0B] text-[#F59E0B]" />
+                        5.0
+                      </span>
+                      <span className="text-[#475569] tabular-nums">
+                        (360+ ulasan bintang 5)
+                      </span>
+                    </div>
+
+                    <ul className="mt-4 space-y-3 border-t border-[#E2E8F0] pt-4 text-sm text-[#334155]">
+                      <li className="flex items-start gap-2.5">
+                        <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#489BE2]" />
+                        <span>
+                          Cabang Surabaya, Sidoarjo &amp; Bangkalan (Klinik &amp; Home Visit)
+                        </span>
+                      </li>
+                      <li className="flex items-center gap-2.5">
+                        <Phone className="h-4 w-4 shrink-0 text-[#16A34A]" />
+                        <a
+                          href={buildWhatsAppLink()}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-bold text-[#0F2942] hover:text-[#16A34A] tabular-nums"
+                        >
+                          WhatsApp: {WHATSAPP_CONFIG.displayNumber}
+                        </a>
+                      </li>
+                      <li className="flex items-center gap-2.5">
+                        <Clock className="h-4 w-4 shrink-0 text-[#F2B029]" />
+                        <span>Jam Buka: Setiap Hari · 08.00 – 20.00 WIB</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
         )}
 
         {/* HALAMAN 2: METODE (metode.html) — KARTU METODE INTERAKTIF */}
@@ -1300,7 +2151,7 @@ export default function App() {
             <div className="md:col-span-3">
               <h3 className="font-heading text-base font-semibold text-[#F2B029]">Navigasi</h3>
               <ul className="mt-4 space-y-2.5 text-sm text-[#E2E8F0]">
-                {NAV_LINKS.map((link) => (
+                {ALL_NAV_LINKS.map((link) => (
                   <li key={link.href}>
                     <a href={link.href} className="hover:text-[#F2B029] transition-colors">
                       {link.label}

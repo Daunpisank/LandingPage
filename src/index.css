@@ -261,13 +261,16 @@
 .nav-pill-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 8px 18px;
+  gap: 0.4rem;
+  padding: 8px 15px;
   border-radius: 50px;
   font-weight: 700;
   color: #334155;
   text-decoration: none;
   white-space: nowrap;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
   transition: all 0.3s ease;
 }
 
@@ -281,7 +284,7 @@
 .nav-pill-link[data-active="true"] {
   background-color: #FFD43B;
   color: #0F2942;
-  padding: 8px 20px;
+  padding: 8px 17px;
   border-radius: 50px;
   box-shadow: 0 6px 16px -6px rgba(242, 176, 41, 0.5), 0 2px 6px -2px rgba(15, 41, 66, 0.08);
 }
@@ -310,6 +313,46 @@
   min-height: 46px;
   padding: 10px 20px;
   border-radius: 50px;
+}
+
+/* Desktop Submenu Dropdown */
+.nav-submenu-wrapper {
+  position: relative;
+}
+
+.nav-submenu-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 290px;
+  border-radius: 20px;
+  border: 1px solid #E2E8F0;
+  background-color: #FFFFFF;
+  padding: 8px;
+  box-shadow: 0 20px 44px -12px rgba(15, 41, 66, 0.18), 0 4px 12px -4px rgba(72, 155, 226, 0.1);
+  z-index: 60;
+  animation: tabFadeSlide 0.18s ease forwards;
+}
+
+.nav-submenu-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border-radius: 14px;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: #0F2942;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.nav-submenu-item:hover {
+  background-color: #FFF7ED;
+  transform: translateX(2px);
+}
+
+.nav-submenu-item[data-active="true"] {
+  background-color: #FFFBEB;
+  border: 1px solid #FDE68A;
 }
 
 /* Hero Section: Full-Bleed Background Gambar Klinik + Overlay Gradasi Putih */
@@ -557,6 +600,36 @@
   z-index: 2;
 }
 
+/* Animasi Entrance Hero: Smooth Fade-In-Up Staggered */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  opacity: 0;
+  animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+.fade-delay-1 {
+  animation-delay: 0.1s;
+}
+
+.fade-delay-2 {
+  animation-delay: 0.3s;
+}
+
+.fade-delay-3 {
+  animation-delay: 0.5s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -565,6 +638,11 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+  .fade-in-up {
+    opacity: 1;
+    transform: none;
+    animation: none;
   }
   .hero-gallery-slide.active,
   .auto-gallery-slide.active {
@@ -671,6 +749,284 @@
   }
 }
 
+/* Section Pilihan Paket Khitan Nyaman (Beranda) */
+.pricing-beranda-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  max-width: 920px;
+  margin-left: auto;
+  margin-right: auto;
+  align-items: stretch;
+}
+
+.pricing-beranda-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background:
+    linear-gradient(#FFFFFF, #FFFFFF) padding-box,
+    linear-gradient(135deg, #BAE6FD 0%, #E2E8F0 50%, #FDBA74 100%) border-box;
+  border-radius: 28px;
+  border: 2px solid transparent;
+  padding: 36px 30px;
+  box-shadow:
+    0 14px 36px -12px rgba(15, 41, 66, 0.1),
+    0 4px 14px -4px rgba(72, 155, 226, 0.08);
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.32s ease;
+}
+
+.pricing-beranda-card:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow:
+    0 26px 52px -12px rgba(15, 41, 66, 0.16),
+    0 12px 28px -8px rgba(72, 155, 226, 0.22);
+}
+
+.pricing-beranda-card--vip {
+  background:
+    linear-gradient(180deg, #FFFDF5 0%, #FFFFFF 45%, #FFFFFF 100%) padding-box,
+    linear-gradient(135deg, #FACC15 0%, #F97316 52%, #FDE047 100%) border-box;
+  border: 3px solid transparent;
+  box-shadow:
+    0 18px 42px -10px rgba(242, 176, 41, 0.28),
+    0 6px 18px -4px rgba(249, 115, 22, 0.14);
+}
+
+.pricing-beranda-card--vip:hover {
+  transform: translateY(-10px) scale(1.015);
+  box-shadow:
+    0 30px 60px -12px rgba(242, 176, 41, 0.38),
+    0 14px 30px -8px rgba(249, 115, 22, 0.24);
+}
+
+.pricing-beranda-price {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+  color: #EA580C;
+  background: linear-gradient(135deg, #EA580C 0%, #DC2626 55%, #F97316 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.badge-best-seller {
+  position: absolute;
+  top: -16px;
+  left: -14px;
+  z-index: 10;
+  background: linear-gradient(135deg, #F97316 0%, #F59E0B 55%, #FACC15 100%);
+  color: #FFFFFF;
+  font-family: var(--font-heading);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  border: 2.5px solid #FFFFFF;
+  transform-origin: center;
+  animation: pulseGlow 1.9s ease-in-out infinite;
+  will-change: transform, box-shadow;
+  user-select: none;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 14px rgba(249, 115, 22, 0.45), 0 0 0 0 rgba(250, 204, 21, 0.55);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 8px 24px rgba(249, 115, 22, 0.7), 0 0 22px 6px rgba(250, 204, 21, 0.75);
+  }
+}
+
+/* Section 2: Temukan Cabang Terdekat (3 Kolom Card) */
+.branches-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  align-items: stretch;
+}
+
+.branch-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #FFFFFF;
+  border-radius: 24px;
+  border: 1px solid #E2E8F0;
+  overflow: hidden;
+  box-shadow: 0 12px 30px -10px rgba(15, 41, 66, 0.09);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.branch-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -12px rgba(15, 41, 66, 0.14);
+}
+
+.branch-card-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+/* Section 3: Lokasi (Tab Interaktif & Transisi Fade Peta) */
+.location-tabs-bar {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.location-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 10px 26px;
+  border-radius: 14px;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: #FFFFFF;
+  color: #0F2942;
+  border: 1.5px solid #CBD5E1;
+  box-shadow: 0 4px 12px -4px rgba(15, 41, 66, 0.07);
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+}
+
+.location-tab-btn:hover {
+  border-color: #0F2942;
+  transform: translateY(-1px);
+}
+
+.location-tab-btn[data-active="true"] {
+  background-color: #0F2942;
+  color: #FFFFFF;
+  border-color: #0F2942;
+  box-shadow: 0 10px 24px -8px rgba(15, 41, 66, 0.35);
+}
+
+@keyframes tabFadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.location-panel-fade {
+  animation: tabFadeSlide 0.35s ease forwards;
+}
+
+/* Section 4: Edukasi untuk Orang Tua (Grid 6 Card) */
+.education-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  align-items: stretch;
+}
+
+.education-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #FFFFFF;
+  border-radius: 22px;
+  border: 1px solid #E2E8F0;
+  padding: 24px;
+  box-shadow: 0 10px 28px -10px rgba(15, 41, 66, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.education-card:hover {
+  transform: translateY(-4px);
+  border-color: #CBD5E1;
+  box-shadow: 0 18px 36px -12px rgba(15, 41, 66, 0.13);
+}
+
+.badge-draf {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background-color: #F1F5F9;
+  border: 1px solid #CBD5E1;
+  color: #475569;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Section 5: Kontak & Reservasi (2 Kolom) */
+.reservation-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.reservation-input {
+  width: 100%;
+  border-radius: 14px;
+  border: 1.5px solid #E2E8F0;
+  background-color: #F8FAFC;
+  padding: 12px 16px;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  color: #0F2942;
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.reservation-input::placeholder {
+  color: #94A3B8;
+}
+
+.reservation-input:focus {
+  outline: none;
+  background-color: #FFFFFF;
+  border-color: #0F2942;
+  box-shadow: 0 0 0 3px rgba(72, 155, 226, 0.2);
+}
+
+.btn-wa-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 24px;
+  border-radius: 16px;
+  background-color: #22C55E;
+  color: #FFFFFF;
+  font-family: var(--font-heading);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  box-shadow: 0 12px 26px -8px rgba(34, 197, 94, 0.45);
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-wa-submit:hover {
+  background-color: #16A34A;
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px -8px rgba(22, 163, 74, 0.5);
+}
+
 /* Mobile-First UX Optimization & Slider Fix (<= 768px) */
 @media (max-width: 768px) {
   /* Sembunyikan elemen dekorasi background agar tampilan HP bersih */
@@ -705,14 +1061,8 @@
     text-align: center;
   }
 
-  .hero-trust-line {
-    justify-content: center;
-  }
-
-  .mobile-center-items {
-    justify-content: center;
-  }
-
+  .hero-trust-line,
+  .mobile-center-items,
   footer ul li {
     justify-content: center;
   }
@@ -781,4 +1131,56 @@
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1.06);
   }
+
+  /* Grid 2 kartu harga menjadi 1 kolom bertumpuk di HP */
+  .pricing-beranda-grid {
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    gap: 28px;
+  }
+
+  .pricing-beranda-card {
+    padding: 28px 20px;
+  }
+
+  .pricing-beranda-price {
+    font-size: 2rem;
+  }
+
+  .badge-best-seller {
+    top: -14px;
+    left: -8px;
+    font-size: 0.75rem;
+    padding: 7px 14px;
+  }
+
+  .branches-grid,
+  .education-grid,
+  .reservation-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .branch-card,
+  .education-card,
+  .reservation-form-card {
+    text-align: left;
+  }
+
+  .branch-card-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .location-tabs-bar {
+    width: 100%;
+  }
+
+  .location-tab-btn {
+    flex: 1 1 auto;
+    padding: 10px 16px;
+  }
 }
+
+

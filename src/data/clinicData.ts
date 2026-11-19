@@ -1,3 +1,8 @@
+import clinicBranchSurabayaImg from '../assets/images/clinic_branch_surabaya_1795064974516.jpg';
+import clinicBranchSidoarjoImg from '../assets/images/clinic_branch_sidoarjo_1795064975540.jpg';
+import clinicBranchBangkalanImg from '../assets/images/clinic_branch_bangkalan_1795064974058.jpg';
+import clinicMainExteriorImg from '../assets/images/clinic_main_exterior_1795064974800.jpg';
+
 export const WHATSAPP_CONFIG = {
   phoneNumber: '6285236959788',
   displayNumber: '0852-3695-9788',
@@ -13,6 +18,7 @@ export function buildWhatsAppLink(customMessage?: string): string {
 export const ASSETS = {
   mascotLogo: '/assets/aistudio/WhatsApp_Image_2026-07-15_at_14.33.22_7ea65c16.jpeg',
   pricelistPoster: '/assets/aistudio/Pricelist_lengkap_2c1365d3.jpg',
+  clinicMainExterior: clinicMainExteriorImg,
 };
 
 export const HERO_GALLERY_PHOTOS = [
@@ -476,3 +482,126 @@ export const GALLERY_PHOTOS: GalleryPhotoItem[] = [
     category: 'Hadiah Anak',
   },
 ];
+
+export interface BranchDirectoryItem {
+  id: 'surabaya' | 'sidoarjo' | 'bangkalan';
+  cityLabel: string;
+  clinicName: string;
+  imageSrc: string;
+  imageAlt: string;
+  fallbackRating: number;
+  fallbackReviewCount: number;
+  fallbackAddress: string;
+  whatsappDisplay: string;
+  operatingHours: string;
+  mapsQuery: string;
+  mapsSearchUrl: string;
+}
+
+export const BRANCH_DIRECTORY: BranchDirectoryItem[] = [
+  {
+    id: 'surabaya',
+    cityLabel: 'Surabaya',
+    clinicName: 'Sunat Nano Circumcision Surabaya',
+    imageSrc: clinicBranchSurabayaImg,
+    imageAlt: 'Gedung Klinik Sunat Nano Circumcision Cabang Surabaya',
+    fallbackRating: 5.0,
+    fallbackReviewCount: 145,
+    fallbackAddress: 'Jl. Manyar Kertoarjo No. 45, Kec. Gubeng, Kota Surabaya, Jawa Timur',
+    whatsappDisplay: '0852-3695-9788',
+    operatingHours: 'Setiap Hari · 08.00 – 20.00 WIB',
+    mapsQuery: 'Sunat Nano Circumcision Surabaya',
+    mapsSearchUrl:
+      'https://www.google.com/maps/search/?api=1&query=Sunat+Nano+Circumcision+Surabaya',
+  },
+  {
+    id: 'sidoarjo',
+    cityLabel: 'Sidoarjo',
+    clinicName: 'Sunat Nano Circumcision Sidoarjo',
+    imageSrc: clinicBranchSidoarjoImg,
+    imageAlt: 'Gedung Klinik Sunat Nano Circumcision Cabang Sidoarjo',
+    fallbackRating: 5.0,
+    fallbackReviewCount: 118,
+    fallbackAddress: 'Jl. Raya Ponti No. 18, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur',
+    whatsappDisplay: '0852-3695-9788',
+    operatingHours: 'Setiap Hari · 08.00 – 20.00 WIB',
+    mapsQuery: 'Sunat Nano Circumcision Sidoarjo',
+    mapsSearchUrl:
+      'https://www.google.com/maps/search/?api=1&query=Sunat+Nano+Circumcision+Sidoarjo',
+  },
+  {
+    id: 'bangkalan',
+    cityLabel: 'Bangkalan',
+    clinicName: 'Sunat Nano Circumcision Bangkalan',
+    imageSrc: clinicBranchBangkalanImg,
+    imageAlt: 'Gedung Klinik Sunat Nano Circumcision Cabang Bangkalan',
+    fallbackRating: 5.0,
+    fallbackReviewCount: 102,
+    fallbackAddress: 'Jl. Soekarno Hatta No. 32, Mlajah, Kec. Bangkalan, Jawa Timur',
+    whatsappDisplay: '0852-3695-9788',
+    operatingHours: 'Setiap Hari · 08.00 – 20.00 WIB',
+    mapsQuery: 'Sunat Nano Circumcision Bangkalan',
+    mapsSearchUrl:
+      'https://www.google.com/maps/search/?api=1&query=Sunat+Nano+Circumcision+Bangkalan',
+  },
+];
+
+export interface ParentEducationArticle {
+  id: string;
+  badge: string;
+  title: string;
+  description: string;
+  topicPrompt: string;
+}
+
+export const PARENT_EDUCATION_ARTICLES: ParentEducationArticle[] = [
+  {
+    id: 'edu-persiapan-mental',
+    badge: 'DRAF',
+    title: 'Persiapan Mental Anak Sebelum Sunat Tanpa Rasa Takut',
+    description:
+      'Tips komunikasi hangat untuk Ayah dan Bunda agar si kecil merasa tenang, berani, dan siap menyambut hari sunat dengan ceria.',
+    topicPrompt: 'Artikel: Persiapan Mental Anak Sebelum Sunat',
+  },
+  {
+    id: 'edu-bipolar-vs-klamp',
+    badge: 'DRAF',
+    title: 'Perbedaan Metode Bipolar Pen Sealer dan Nano Klemp Modern',
+    description:
+      'Kenali keunggulan masing-masing metode modern tanpa jahitan supaya orang tua mudah menentukan pilihan paling nyaman bagi anak.',
+    topicPrompt: 'Artikel: Perbedaan Bipolar Pen Sealer dan Nano Klemp',
+  },
+  {
+    id: 'edu-bius-tanpa-jarum',
+    badge: 'DRAF',
+    title: 'Bagaimana Cara Kerja Bius Tanpa Jarum Suntik di Sunat Nano?',
+    description:
+      'Penjelasan medis mengenai teknologi bius ramah anak bertekanan lembut yang membuat proses anestesi jauh lebih nyaman tanpa tusukan jarum.',
+    topicPrompt: 'Artikel: Cara Kerja Bius Tanpa Jarum Suntik',
+  },
+  {
+    id: 'edu-perawatan-rumah',
+    badge: 'DRAF',
+    title: 'Panduan Perawatan Luka Pasca Sunat Tanpa Jahitan di Rumah',
+    description:
+      'Langkah praktis menjaga kebersihan, memilih celana nyaman, dan tanda pemulihan normal agar anak lekas kembali bermain aktif.',
+    topicPrompt: 'Artikel: Panduan Perawatan Luka Pasca Sunat',
+  },
+  {
+    id: 'edu-usia-terbaik',
+    badge: 'DRAF',
+    title: 'Kapan Usia Ideal untuk Sunat Bayi, Anak, hingga Remaja?',
+    description:
+      'Pertimbangan medis dan psikologis menentukan waktu sunat terbaik mulai dari masa bayi baru lahir hingga usia sekolah dasar.',
+    topicPrompt: 'Artikel: Menentukan Usia Ideal Sunat Anak',
+  },
+  {
+    id: 'edu-anak-gemuk-abk',
+    badge: 'DRAF',
+    title: 'Solusi Sunat Aman untuk Anak Gemuk & Anak Berkebutuhan Khusus',
+    description:
+      'Pendekatan khusus oleh dokter berpengalaman agar anak bertubuh gemuk maupun ABK tetap mendapatkan tindakan aman tanpa harus diet ketat dulu.',
+    topicPrompt: 'Artikel: Sunat Khusus Anak Gemuk & ABK',
+  },
+];
+
