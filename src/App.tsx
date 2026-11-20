@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { APIProvider } from '@vis.gl/react-google-maps';
 import { motion } from 'motion/react';
 import {
@@ -8,7 +8,6 @@ import {
   BookOpen,
   Check,
   CheckCircle2,
-  ChevronDown,
   Clock,
   ExternalLink,
   Gift,
@@ -125,46 +124,15 @@ const BERANDA_PRICING_PACKAGES = [
 
 type PageId = 'beranda' | 'metode' | 'layanan' | 'galeri' | 'cabang' | 'edukasi' | 'kontak';
 
-interface NavLinkItem {
-  id: PageId;
-  href: string;
-  emoji: string;
-  label: string;
-  description?: string;
-}
-
-const NAV_LINKS: NavLinkItem[] = [
+const NAV_LINKS: Array<{ id: PageId; href: string; emoji: string; label: string }> = [
   { id: 'beranda', href: 'index.html', emoji: '🏠', label: 'Beranda' },
   { id: 'metode', href: 'metode.html', emoji: '🩺', label: 'Metode' },
   { id: 'layanan', href: 'layanan.html', emoji: '🧸', label: 'Layanan' },
   { id: 'galeri', href: 'galeri.html', emoji: '📸', label: 'Galeri' },
+  { id: 'cabang', href: 'cabang.html', emoji: '📍', label: 'Cabang' },
+  { id: 'edukasi', href: 'edukasi.html', emoji: '📖', label: 'Edukasi' },
+  { id: 'kontak', href: 'kontak.html', emoji: '📞', label: 'Kontak & Reservasi' },
 ];
-
-const SUBMENU_LINKS: NavLinkItem[] = [
-  {
-    id: 'cabang',
-    href: 'cabang.html',
-    emoji: '📍',
-    label: 'Cabang',
-    description: 'Informasi cabang, kontak & Google Maps',
-  },
-  {
-    id: 'edukasi',
-    href: 'edukasi.html',
-    emoji: '📖',
-    label: 'Edukasi',
-    description: 'Kumpulan draf panduan untuk orang tua',
-  },
-  {
-    id: 'kontak',
-    href: 'kontak.html',
-    emoji: '📞',
-    label: 'Kontak & Reservasi',
-    description: 'Formulir pendaftaran & jadwal WhatsApp',
-  },
-];
-
-const ALL_NAV_LINKS: NavLinkItem[] = [...NAV_LINKS, ...SUBMENU_LINKS];
 
 function detectCurrentPage(): PageId {
   if (typeof document !== 'undefined') {
@@ -207,8 +175,6 @@ export default function App() {
   const [currentPage] = useState<PageId>(() => detectCurrentPage());
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [submenuOpen, setSubmenuOpen] = useState(false);
-  const submenuRef = useRef<HTMLDivElement | null>(null);
   const [waModalOpen, setWaModalOpen] = useState(false);
   const [waContextTopic, setWaContextTopic] = useState<string | null>(null);
   const [pricelistModalOpen, setPricelistModalOpen] = useState(false);
@@ -263,28 +229,6 @@ export default function App() {
     window.addEventListener('gmp-quota-exceeded', onQuotaExceeded);
     return () => window.removeEventListener('gmp-quota-exceeded', onQuotaExceeded);
   }, []);
-
-  useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
-      if (submenuRef.current && !submenuRef.current.contains(event.target as Node)) {
-        setSubmenuOpen(false);
-      }
-    };
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setSubmenuOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleOutsideClick);
-    document.addEventListener('keydown', handleEscape);
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-      document.removeEventListener('keydown', handleEscape);
-    };
-  }, []);
-
-  const activeSubmenuItem = SUBMENU_LINKS.find((item) => item.id === currentPage);
-  const isSubmenuActive = Boolean(activeSubmenuItem);
 
   const openConsultation = (topic?: string) => {
     setWaContextTopic(topic ?? null);
@@ -407,11 +351,11 @@ export default function App() {
             : 'bg-white/80 backdrop-blur-sm border-b border-transparent'
         }`}
       >
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-8 px-4 py-3.5 sm:px-6">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 xl:gap-4 px-4 py-3 sm:px-6">
           {/* Zone 1: Brand Wordmark + Maskot */}
           <a
             href="index.html"
-            className="flex items-center gap-3 whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0284C7]"
+            className="flex items-center gap-2.5 whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0284C7]"
           >
             {!mascotError ? (
               <img
@@ -419,25 +363,25 @@ export default function App() {
                 alt="Maskot Sunat Nano"
                 referrerPolicy="no-referrer"
                 onError={() => setMascotError(true)}
-                className="h-11 w-11 rounded-xl object-cover border border-[#E2E8F0]"
+                className="h-9 w-9 xl:h-11 xl:w-11 rounded-xl object-cover border border-[#E2E8F0]"
               />
             ) : (
-              <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[#0284C7] text-white font-heading font-bold text-sm">
+              <span className="inline-flex h-9 w-9 xl:h-11 xl:w-11 items-center justify-center rounded-xl bg-[#0284C7] text-white font-heading font-bold text-sm">
                 SN
               </span>
             )}
             <span className="flex flex-col leading-none">
-              <SunatNanoWordmark className="text-2xl sm:text-[28px]" />
-              <span className="mt-1 font-heading text-[11px] sm:text-xs font-semibold tracking-wide text-[#0B4F6C]">
+              <SunatNanoWordmark className="text-lg xl:text-2xl" />
+              <span className="mt-0.5 font-heading text-[10px] xl:text-xs font-semibold tracking-wide text-[#0B4F6C]">
                 sunat canggih &amp; modern
               </span>
             </span>
           </a>
 
-          {/* Zone 2: Pill Nav Links dengan Ikon/Emoji + Submenu */}
+          {/* Zone 2: Pill Nav Links Sejajar (Beranda, Metode, Layanan, Galeri, Cabang, Edukasi, Kontak & Reservasi) */}
           <nav
             aria-label="Navigasi Utama"
-            className="hidden lg:flex items-center gap-1.5 text-[14.5px]"
+            className="hidden lg:flex items-center gap-0.5 xl:gap-1"
           >
             {NAV_LINKS.map((item) => {
               const isActive = currentPage === item.id;
@@ -456,78 +400,14 @@ export default function App() {
                 </a>
               );
             })}
-
-            {/* Submenu Dropdown: Cabang, Edukasi, Kontak & Reservasi */}
-            <div
-              ref={submenuRef}
-              className="nav-submenu-wrapper shrink-0"
-              onMouseEnter={() => setSubmenuOpen(true)}
-              onMouseLeave={() => setSubmenuOpen(false)}
-            >
-              <button
-                type="button"
-                aria-haspopup="true"
-                aria-expanded={submenuOpen}
-                data-active={isSubmenuActive ? 'true' : undefined}
-                onClick={() => setSubmenuOpen((prev) => !prev)}
-                className="nav-pill-link shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#489BE2]"
-              >
-                <span className="nav-pill-icon" aria-hidden="true">
-                  {activeSubmenuItem ? activeSubmenuItem.emoji : '🗂️'}
-                </span>
-                <span>{activeSubmenuItem ? activeSubmenuItem.label : 'Submenu'}</span>
-                <ChevronDown
-                  className={`h-4 w-4 transition-transform duration-200 ${
-                    submenuOpen ? 'rotate-180' : ''
-                  }`}
-                  aria-hidden="true"
-                />
-              </button>
-
-              {submenuOpen && (
-                <div className="nav-submenu-panel" role="menu" aria-label="Submenu Informasi Klinik">
-                  {SUBMENU_LINKS.map((sub) => {
-                    const isSubActive = currentPage === sub.id;
-                    return (
-                      <a
-                        key={sub.href}
-                        href={sub.href}
-                        role="menuitem"
-                        aria-current={isSubActive ? 'page' : undefined}
-                        data-active={isSubActive ? 'true' : undefined}
-                        onClick={() => setSubmenuOpen(false)}
-                        className="nav-submenu-item"
-                      >
-                        <span
-                          className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-base"
-                          aria-hidden="true"
-                        >
-                          {sub.emoji}
-                        </span>
-                        <span className="flex flex-col text-left">
-                          <span className="font-heading text-sm font-bold leading-snug text-[#0F2942]">
-                            {sub.label}
-                          </span>
-                          {sub.description && (
-                            <span className="mt-0.5 text-xs leading-snug text-[#475569]">
-                              {sub.description}
-                            </span>
-                          )}
-                        </span>
-                      </a>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
           </nav>
 
           {/* Zone 3: Single Primary Action + Mobile Menu Trigger */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
               onClick={() => openConsultation()}
-              className="typo-cta hidden sm:inline-flex min-h-[42px] items-center justify-center gap-2 rounded-2xl bg-[#489BE2] px-5 py-2 text-[15px] text-white shadow-sm hover:bg-[#3182CE] transition-colors whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#489BE2]"
+              className="typo-cta hidden sm:inline-flex min-h-[40px] xl:min-h-[42px] items-center justify-center gap-1.5 rounded-2xl bg-[#489BE2] px-3.5 xl:px-5 py-2 text-[13px] xl:text-[14.5px] text-white shadow-sm hover:bg-[#3182CE] transition-colors whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#489BE2]"
             >
               <MessageCircle className="h-4 w-4" />
               <span>Konsultasi Gratis</span>
@@ -567,32 +447,6 @@ export default function App() {
                   </a>
                 );
               })}
-
-              <div className="my-1 border-t border-[#E2E8F0] pt-2">
-                <p className="px-4 pb-1.5 text-xs font-extrabold uppercase tracking-wider text-[#64748B]">
-                  Submenu Informasi
-                </p>
-                <div className="flex flex-col gap-1.5">
-                  {SUBMENU_LINKS.map((sub) => {
-                    const isActive = currentPage === sub.id;
-                    return (
-                      <a
-                        key={sub.href}
-                        href={sub.href}
-                        aria-current={isActive ? 'page' : undefined}
-                        data-active={isActive ? 'true' : undefined}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="nav-pill-link nav-pill-mobile text-base"
-                      >
-                        <span className="nav-pill-icon" aria-hidden="true">
-                          {sub.emoji}
-                        </span>
-                        <span>{sub.label}</span>
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
 
               <button
                 type="button"
@@ -789,6 +643,14 @@ export default function App() {
                 </div>
               </div>
             </section>
+
+            {/* SECTION INTEGRASI GOOGLE (Lokasi Peta & Ulasan Google Maps) */}
+            <BerandaMapAndReviewsSection
+              hasApiKey={hasMapsApiKey && !quotaExceeded}
+              branchesData={branchesData}
+              selectedBranchId={selectedBranchId}
+              onSelectBranch={setSelectedBranchId}
+            />
 
             {/* SECTION GALERI FOTO BERJALAN (Auto-Slider Crossfade + Ken Burns) */}
             <section
@@ -2151,7 +2013,7 @@ export default function App() {
             <div className="md:col-span-3">
               <h3 className="font-heading text-base font-semibold text-[#F2B029]">Navigasi</h3>
               <ul className="mt-4 space-y-2.5 text-sm text-[#E2E8F0]">
-                {ALL_NAV_LINKS.map((link) => (
+                {NAV_LINKS.map((link) => (
                   <li key={link.href}>
                     <a href={link.href} className="hover:text-[#F2B029] transition-colors">
                       {link.label}
